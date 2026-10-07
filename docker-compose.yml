@@ -1,0 +1,69 @@
+services:
+  # PostgreSQL database service.
+  db:
+    image: postgres:16-alpine
+    container_name: sales_quality_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${POSTGRES_HOST_PORT}:${POSTGRES_CONTAINER_PORT}"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  # Web interface for PostgreSQL administration.
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: sales_quality_pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+    ports:
+      - "${PGADMIN_HOST_PORT}:80"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # Python analytics pipeline.
+  analytics:
+    build:
+      context: ./app
+    container_name: sales_quality_analytics
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${POSTGRES_CONTAINER_PORT}
+      DB_NAME: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+
+      PRODUCT_COUNT: ${PRODUCT_COUNT}
+      CUSTOMER_COUNT: ${CUSTOMER_COUNT}
+      SALES_COUNT: ${SALES_COUNT}
+      PROMOTION_COUNT: ${PROMOTION_COUNT}
+      RANDOM_SEED: ${RANDOM_SEED}
+
+      ABC_A_THRESHOLD: ${ABC_A_THRESHOLD}
+      ABC_B_THRESHOLD: ${ABC_B_THRESHOLD}
+      XYZ_X_THRESHOLD: ${XYZ_X_THRESHOLD}
+      XYZ_Y_THRESHOLD: ${XYZ_Y_THRESHOLD}
+    volumes:
+      - ./app/data:/app/data
+      - ./app/src:/app/src
+      - ./app/sql:/app/sql
+      - ./app/tests:/app/tests
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["python", "src/run_pipeline.py"]
+
+volumes:
+  # Persistent PostgreSQL storage.
+  postgres_data:
