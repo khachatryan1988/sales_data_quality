@@ -64,6 +64,49 @@ services:
         condition: service_healthy
     command: ["python", "src/run_pipeline.py"]
 
+  web:
+    build:
+      context: ./app
+
+    container_name: sales_quality_web
+
+    restart: unless-stopped
+
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${POSTGRES_CONTAINER_PORT}
+      DB_NAME: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+
+      ABC_A_THRESHOLD: ${ABC_A_THRESHOLD}
+      ABC_B_THRESHOLD: ${ABC_B_THRESHOLD}
+      XYZ_X_THRESHOLD: ${XYZ_X_THRESHOLD}
+      XYZ_Y_THRESHOLD: ${XYZ_Y_THRESHOLD}
+
+    ports:
+      - "8002:8000"
+
+    volumes:
+      - ./app/data:/app/data
+      - ./app/src:/app/src
+      - ./app/sql:/app/sql
+      - ./app/sql:/app/sql
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+    command:
+      [
+        "uvicorn",
+        "src.web.main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000"
+      ]
+
 volumes:
   # Persistent PostgreSQL storage.
   postgres_data:

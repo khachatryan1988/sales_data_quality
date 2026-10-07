@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Analysis Result
+    </title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7fa;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 50px auto;
+            padding: 0 24px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 18px;
+            padding: 35px;
+            box-shadow:
+                0 12px 40px
+                rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            margin-top: 0;
+            margin-bottom: 12px;
+        }
+
+        .success {
+            color: #15803d;
+        }
+
+        .error {
+            color: #b91c1c;
+        }
+
+        .filename {
+            margin-bottom: 28px;
+            color: #475569;
+        }
+
+        .stats {
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(180px, 1fr)
+                );
+
+            gap: 16px;
+            margin-top: 25px;
+        }
+
+        .stat {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #f1f5f9;
+        }
+
+        .stat-value {
+            font-size: 27px;
+            font-weight: bold;
+            color: #0f172a;
+        }
+
+        .stat-label {
+            color: #64748b;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        .section-title {
+            margin-top: 35px;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+
+        pre {
+            background: #111827;
+            color: #e5e7eb;
+            padding: 20px;
+            border-radius: 12px;
+            overflow-x: auto;
+            overflow-y: auto;
+            max-height: 420px;
+            line-height: 1.45;
+            font-size: 13px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 28px;
+        }
+
+        .button {
+            display: inline-block;
+            margin-top: 0;
+            text-decoration: none;
+            color: white;
+            padding: 13px 19px;
+            border-radius: 9px;
+            transition: 0.2s;
+            font-size: 14px;
+        }
+
+        .button:hover {
+            opacity: 0.9;
+        }
+
+        .issues-button {
+            background: #dc2626;
+        }
+
+        .report-button {
+            background: #0f766e;
+        }
+
+        .upload-button {
+            background: #2563eb;
+        }
+
+        .home-button {
+            background: #475569;
+        }
+
+        .error-box {
+            margin-top: 20px;
+            padding: 20px;
+            background: #fef2f2;
+            border:
+                1px solid #fecaca;
+            border-radius: 12px;
+            color: #991b1b;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .info-box {
+            margin-top: 28px;
+            padding: 18px 20px;
+            background: #f0fdfa;
+            border:
+                1px solid #ccfbf1;
+            border-radius: 12px;
+            color: #115e59;
+            line-height: 1.5;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        {% if success %}
+
+        <h1 class="success">
+            Analysis completed successfully
+        </h1>
+
+        <div class="filename">
+            File:
+            <strong>
+                {{ filename }}
+            </strong>
+        </div>
+
+        <div class="stats">
+
+            <div class="stat">
+
+                <div class="stat-value">
+                    {{ statistics.raw_products }}
+                </div>
+
+                <div class="stat-label">
+                    Raw Products
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-value">
+                    {{ statistics.raw_customers }}
+                </div>
+
+                <div class="stat-label">
+                    Raw Customers
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-value">
+                    {{ statistics.raw_sales }}
+                </div>
+
+                <div class="stat-label">
+                    Raw Sales
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-value">
+                    {{ statistics.raw_promotions }}
+                </div>
+
+                <div class="stat-label">
+                    Raw Promotions
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-value">
+                    {{ statistics.clean_products }}
+                </div>
+
+                <div class="stat-label">
+                    Clean Products
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-value">
+                    {{ statistics.clean_customers }}
+                </div>
+
+                <div class="stat-label">
+                    Clean Customers
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-value">
+                    {{ statistics.clean_sales }}
+                </div>
+
+                <div class="stat-label">
+                    Clean Sales
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-value">
+                    {{ statistics.clean_promotions }}
+                </div>
+
+                <div class="stat-label">
+                    Clean Promotions
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-value">
+                    {{ statistics.data_quality_issues }}
+                </div>
+
+                <div class="stat-label">
+                    Data Quality Issues
+                </div>
+
+            </div>
+
+
+            {% if statistics.data_quality_score is not none %}
+
+            <div class="stat">
+
+                <div class="stat-value">
+                    {{ statistics.data_quality_score }}%
+                </div>
+
+                <div class="stat-label">
+                    Data Quality Score
+                </div>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="info-box">
+
+            The uploaded workbook was validated,
+            loaded into the PostgreSQL raw layer,
+            processed through the Data Quality
+            pipeline, cleaned, analyzed, and
+            prepared for reporting.
+
+        </div>
+
+
+        <div class="actions">
+
+            <a
+                    href="/issues"
+                    class="button issues-button"
+            >
+                View Data Quality Issues
+            </a>
+
+            <a
+                    href="/report"
+                    class="button report-button"
+            >
+                Download Data Quality Report
+            </a>
+
+            <a
+                    href="/"
+                    class="button upload-button"
+            >
+                Upload Another File
+            </a>
+
+        </div>
+
+
+        {% if pipeline_output %}
+
+        <h2 class="section-title">
+            Pipeline Output
+        </h2>
+
+        <pre>{{ pipeline_output }}</pre>
+
+        {% endif %}
+
+
+        {% else %}
+
+        <h1 class="error">
+            Analysis failed
+        </h1>
+
+        <div class="error-box">
+            {{ error }}
+        </div>
+
+        <div class="actions">
+
+            <a
+                    href="/"
+                    class="button home-button"
+            >
+                Back to Upload
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

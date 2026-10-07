@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Sales & Data Quality Analytics
+    </title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7fa;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 70px auto;
+            padding: 0 24px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 18px;
+            padding: 40px;
+            box-shadow:
+                0 12px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            margin-top: 0;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 30px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .download-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .download-button {
+            display: inline-block;
+            text-decoration: none;
+            color: white;
+            padding: 13px 22px;
+            border-radius: 9px;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        .template-button {
+            background: #0f766e;
+        }
+
+        .template-button:hover {
+            background: #115e59;
+        }
+
+        .sample-button {
+            background: #7c3aed;
+        }
+
+        .sample-button:hover {
+            background: #6d28d9;
+        }
+
+        .hint {
+            margin-top: 10px;
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .separator {
+            display: flex;
+            align-items: center;
+            margin: 30px 0;
+            color: #94a3b8;
+        }
+
+        .separator::before,
+        .separator::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #e2e8f0;
+        }
+
+        .separator span {
+            padding: 0 15px;
+            font-size: 13px;
+        }
+
+        .upload-box {
+            border: 2px dashed #cbd5e1;
+            border-radius: 14px;
+            padding: 35px;
+            text-align: center;
+            transition: 0.2s;
+        }
+
+        .upload-box:hover {
+            border-color: #94a3b8;
+            background: #f8fafc;
+        }
+
+        input[type="file"] {
+            margin-bottom: 20px;
+        }
+
+        button {
+            border: none;
+            background: #2563eb;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .requirements {
+            margin-top: 35px;
+            padding: 22px;
+            background: #f8fafc;
+            border-radius: 12px;
+            line-height: 1.6;
+        }
+
+        .requirements strong {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        code {
+            background: #e2e8f0;
+            padding: 3px 6px;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>
+            Sales & Data Quality Analytics
+        </h1>
+
+        <div class="subtitle">
+            Upload an Excel workbook and run
+            the complete analytics pipeline.
+        </div>
+
+        <div class="download-buttons">
+
+            <a
+                    href="/template"
+                    class="download-button template-button"
+            >
+                Download Excel Template
+            </a>
+
+            <a
+                    href="/sample"
+                    class="download-button sample-button"
+            >
+                Download Sample Excel
+            </a>
+
+        </div>
+
+        <div class="hint">
+            <strong>Template</strong> contains only the required sheets and columns.
+            <br>
+            <strong>Sample</strong> contains the current data from PostgreSQL raw tables.
+        </div>
+
+        <div class="separator">
+            <span>OR</span>
+        </div>
+
+        <form
+                action="/upload"
+                method="post"
+                enctype="multipart/form-data"
+        >
+
+            <div class="upload-box">
+
+                <input
+                        type="file"
+                        name="file"
+                        accept=".xlsx"
+                        required
+                >
+
+                <br>
+
+                <button type="submit">
+                    Upload & Run Analysis
+                </button>
+
+            </div>
+
+        </form>
+
+        <div class="requirements">
+
+            <strong>
+                Required workbook sheets
+            </strong>
+
+            <p>
+                <code>products</code>,
+                <code>customers</code>,
+                <code>sales</code>,
+                <code>promotions</code>
+            </p>
+
+            <strong>
+                Important
+            </strong>
+
+            <p>
+                Column names must match
+                the current PostgreSQL
+                <code>raw</code> tables.
+            </p>
+
+            <p>
+                For the first test, download
+                <strong>Sample Excel</strong>
+                and upload that same file back.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

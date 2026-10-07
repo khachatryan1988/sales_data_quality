@@ -1,223 +1,295 @@
 # Sales & Data Quality Analytics System
 
-An end-to-end portfolio project for **Data Analyst**, **Business Analyst**, and **Data Quality Specialist** roles.
+An end-to-end portfolio project for **Data Analyst**, **Business Analyst**, and **Data Quality Analyst** roles.
 
-The project demonstrates how raw business data can be generated, validated, cleaned, analyzed, stored in PostgreSQL, and prepared for Power BI.
+The project demonstrates how raw business data can be generated or uploaded from Excel, validated, cleaned, analyzed, stored in PostgreSQL, exported to Excel, and prepared for Power BI reporting.
 
-## Project Goals
+---
 
-This project answers five practical business questions:
+## Project Overview
 
-1. Can the company trust the source data?
-2. Which products generate the most revenue?
-3. Which products have stable or unstable demand?
-4. Which customers, sales channels, and managers perform best?
-5. Do promotions increase revenue and sales volume?
+The system supports two data ingestion workflows:
 
-## Tech Stack
+### Demo Data Mode
+
+```text
+Synthetic Data Generation
+        ↓
+PostgreSQL Raw Layer
+        ↓
+Data Quality Validation
+        ↓
+Clean Layer
+        ↓
+Business Analytics
+        ↓
+Power BI
+```
+
+### Excel Upload Mode
+
+```text
+Excel Workbook
+        ↓
+Structure Validation
+        ↓
+PostgreSQL Raw Layer
+        ↓
+Data Quality Validation
+        ↓
+Clean Layer
+        ↓
+ABC/XYZ Analysis
+        ↓
+Business Analytics
+        ↓
+Excel Report / Power BI
+```
+
+---
+
+## Main Features
+
+The project includes:
+
+- synthetic business data generation;
+- Excel workbook upload;
+- Excel structure validation;
+- PostgreSQL raw data storage;
+- automated Data Quality checks;
+- clean data layer;
+- ABC/XYZ product segmentation;
+- sales KPI calculation;
+- customer analysis;
+- product analysis;
+- channel analysis;
+- manager performance analysis;
+- promotion effectiveness analysis;
+- BI-ready analytical marts;
+- Power BI integration;
+- downloadable Excel templates;
+- downloadable sample datasets;
+- Data Quality issue browser;
+- downloadable Excel analytics report;
+- Docker-based deployment.
+
+---
+
+# Technology Stack
 
 - Python 3.12
 - Pandas
 - NumPy
 - PostgreSQL 16
 - SQLAlchemy
+- psycopg2
+- FastAPI
+- Uvicorn
+- Jinja2
+- openpyxl
+- Docker
 - Docker Compose
 - pgAdmin
-- Pytest
 - Power BI
+- pytest
 
-## Architecture
+---
 
-```text
-Synthetic Raw Data
-        |
-        v
-PostgreSQL: raw schema
-        |
-        v
-Data Quality Checks
-        |
-        v
-PostgreSQL: clean schema
-        |
-        v
-ABC / XYZ Analysis
-        |
-        v
-Business Analytics Marts
-        |
-        v
-PostgreSQL: analytics schema
-        |
-        v
-Power BI
-```
-
-## Project Structure
+# Architecture
 
 ```text
-sales_data_quality_portfolio_english/
-|
-|-- .env
-|-- .env.example
-|-- .gitignore
-|-- docker-compose.yml
-|-- Makefile
-|-- README.md
-|-- GITHUB_README_TEMPLATE.md
-|
-`-- app/
-    |-- Dockerfile
-    |-- requirements.txt
-    |
-    |-- src/
-    |   |-- db.py
-    |   |-- generate_data.py
-    |   |-- load_raw.py
-    |   |-- quality_report.py
-    |   |-- clean_data.py
-    |   |-- abc_xyz.py
-    |   |-- business_analysis.py
-    |   |-- create_views.py
-    |   `-- run_pipeline.py
-    |
-    |-- sql/
-    |   |-- 01_create_raw.sql
-    |   `-- 02_views.sql
-    |
-    |-- tests/
-    |   `-- test_logic.py
-    |
-    `-- data/
-        |-- raw/
-        |-- cleaned/
-        `-- output/
+                    ┌─────────────────────┐
+                    │   Data Sources      │
+                    │                     │
+                    │ Synthetic / Excel   │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │      raw schema     │
+                    │                     │
+                    │ products            │
+                    │ customers           │
+                    │ sales               │
+                    │ promotions          │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │ Data Quality Layer  │
+                    │                     │
+                    │ completeness        │
+                    │ uniqueness          │
+                    │ validity            │
+                    │ referential checks  │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │    clean schema     │
+                    │                     │
+                    │ validated datasets  │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │ analytics schema    │
+                    │                     │
+                    │ KPI                 │
+                    │ ABC/XYZ             │
+                    │ customers           │
+                    │ products            │
+                    │ channels            │
+                    │ managers            │
+                    │ promotions          │
+                    └──────────┬──────────┘
+                               │
+                 ┌─────────────┴─────────────┐
+                 ▼                           ▼
+       ┌──────────────────┐       ┌──────────────────┐
+       │ Excel Reporting  │       │     Power BI     │
+       └──────────────────┘       └──────────────────┘
 ```
 
-## Data Model
+---
 
-### Products
+# Project Structure
 
-The product master contains:
+```text
+sales_data_quality/
+│
+├── .env.example
+├── .gitignore
+├── docker-compose.yml
+├── Makefile
+├── README.md
+│
+└── app/
+    │
+    ├── Dockerfile
+    ├── requirements.txt
+    │
+    ├── data/
+    │   ├── raw/
+    │   ├── cleaned/
+    │   ├── output/
+    │   └── uploads/
+    │
+    ├── sql/
+    │   ├── 01_create_raw.sql
+    │   └── 02_views.sql
+    │
+    ├── tests/
+    │   └── test_logic.py
+    │
+    └── src/
+        │
+        ├── db.py
+        ├── generate_data.py
+        ├── load_raw.py
+        ├── quality_report.py
+        ├── clean_data.py
+        ├── abc_xyz.py
+        ├── business_analysis.py
+        ├── create_views.py
+        ├── run_pipeline.py
+        ├── run_uploaded_pipeline.py
+        ├── excel_import.py
+        │
+        └── web/
+            ├── __init__.py
+            ├── main.py
+            │
+            └── templates/
+                ├── index.html
+                ├── result.html
+                └── issues.html
+```
 
-- product ID
-- SKU
-- barcode
-- product name
-- brand
-- category
-- cost price
-- sale price
+---
 
-### Customers
+# PostgreSQL Data Layers
 
-The customer master contains:
+The project separates data into three PostgreSQL schemas.
 
-- customer ID
-- customer name
-- customer type
-- city
-- registration date
+## raw
 
-### Sales
-
-Each row represents one sales order line and contains:
-
-- sales line ID
-- order ID
-- order date
-- customer ID
-- product ID
-- quantity
-- unit price
-- discount
-- revenue
-- channel
-- manager
-
-### Promotions
-
-Promotion records contain:
-
-- promotion ID
-- product ID
-- start date
-- end date
-- discount percentage
-- campaign name
-
-## Intentional Data Quality Problems
-
-The synthetic dataset intentionally contains errors so the project can demonstrate real data quality checks.
-
-Examples:
-
-- missing barcodes
-- duplicate barcodes
-- missing categories
-- negative prices
-- sale price lower than cost price
-- negative sales quantity
-- missing unit price
-- unknown product IDs
-- unknown customer IDs
-- duplicate sales records
-
-## PostgreSQL Schemas
-
-### `raw`
-
-Stores the original source data exactly as loaded.
+Stores source data without business cleaning.
 
 Tables:
 
-- `raw.products`
-- `raw.customers`
-- `raw.sales`
-- `raw.promotions`
+```text
+raw.products
+raw.customers
+raw.sales
+raw.promotions
+```
 
-### `clean`
+The raw layer preserves the source dataset so Data Quality issues remain traceable.
 
-Stores validated and cleaned business data.
+---
+
+## clean
+
+Stores validated datasets after Data Quality rules are applied.
 
 Tables:
 
-- `clean.products`
-- `clean.customers`
-- `clean.sales`
-- `clean.promotions`
+```text
+clean.products
+clean.customers
+clean.sales
+clean.promotions
+```
 
-### `analytics`
+---
 
-Stores analytical outputs and BI-ready marts.
+## analytics
 
-Main objects:
+Stores analytical tables, KPI outputs, Data Quality results, and BI-ready views.
 
-- `analytics.data_quality_issues`
-- `analytics.data_quality_summary`
-- `analytics.data_quality_score`
-- `analytics.product_abc_xyz`
-- `analytics.fact_sales_enriched`
-- `analytics.kpi_summary`
-- `analytics.monthly_sales`
-- `analytics.product_sales`
-- `analytics.customer_sales`
-- `analytics.channel_sales`
-- `analytics.manager_sales`
-- `analytics.promo_analysis`
-- `analytics.v_sales_by_category`
-- `analytics.v_sales_by_brand`
-- `analytics.v_monthly_sales`
+Main objects include:
 
-## Data Quality Dimensions
+```text
+analytics.data_quality_issues
+analytics.data_quality_summary
+analytics.data_quality_score
 
-The project checks several standard data quality dimensions.
+analytics.product_abc_xyz
 
-### Completeness
+analytics.fact_sales_enriched
 
-Checks whether required fields are missing.
+analytics.kpi_summary
+
+analytics.monthly_sales
+analytics.product_sales
+analytics.customer_sales
+analytics.channel_sales
+analytics.manager_sales
+analytics.promo_analysis
+
+analytics.v_sales_by_category
+analytics.v_sales_by_brand
+analytics.v_monthly_sales
+```
+
+---
+
+# Data Quality Framework
+
+The project automatically checks multiple Data Quality dimensions.
+
+## Completeness
 
 Example:
+
+```text
+Missing barcode
+Missing category
+Missing required values
+```
+
+SQL example:
 
 ```sql
 SELECT *
@@ -225,40 +297,48 @@ FROM raw.products
 WHERE barcode IS NULL;
 ```
 
-### Uniqueness
+---
 
-Checks whether values that should be unique are duplicated.
+## Uniqueness
 
 Example:
+
+```text
+Duplicate barcode
+Duplicate sales records
+```
+
+SQL example:
 
 ```sql
 SELECT
     barcode,
-    COUNT(*) AS occurrences
+    COUNT(*)
 FROM raw.products
 WHERE barcode IS NOT NULL
 GROUP BY barcode
 HAVING COUNT(*) > 1;
 ```
 
-### Validity
+---
 
-Checks whether values follow business rules.
+## Validity
 
 Example:
 
-```sql
-SELECT *
-FROM raw.products
-WHERE sale_price <= 0
-   OR sale_price < cost_price;
+```text
+Negative quantity
+Invalid sales price
+Sales price below allowed business rule
 ```
 
-### Referential Integrity
+---
 
-Checks whether foreign-key-like references point to existing master data.
+## Referential Integrity
 
 Example:
+
+A sales record references a product that does not exist.
 
 ```sql
 SELECT s.*
@@ -268,84 +348,473 @@ LEFT JOIN raw.products p
 WHERE p.product_id IS NULL;
 ```
 
-## ABC Analysis
+---
 
-ABC analysis classifies products based on cumulative revenue contribution.
+# Demo Dataset
+
+The default synthetic dataset contains approximately:
+
+```text
+Products:     500
+Customers:    500
+Sales:     30,003
+Promotions:    40
+```
+
+Intentional Data Quality problems are inserted into the generated data so the validation pipeline can detect and report them.
+
+Example issues include:
+
+- missing barcodes;
+- duplicate barcodes;
+- missing categories;
+- invalid product prices;
+- negative quantity;
+- invalid unit price;
+- unknown product IDs;
+- unknown customer IDs;
+- duplicate sales records.
+
+A typical pipeline run detects:
+
+```text
+Data Quality Issues: 105
+Data Quality Score:   99.66%
+```
+
+The score is a simplified portfolio metric and should not be interpreted as a universal production-grade Data Quality methodology.
+
+---
+
+# Excel Upload
+
+The project includes a FastAPI web interface for uploading business datasets.
+
+Open:
+
+```text
+http://localhost:8002
+```
+
+The interface supports:
+
+```text
+Download Excel Template
+Download Sample Excel
+Upload & Run Analysis
+```
+
+---
+
+## Required Excel Sheets
+
+An uploaded workbook must contain:
+
+```text
+products
+customers
+sales
+promotions
+```
+
+The column names must match the current PostgreSQL `raw` table structure.
+
+---
+
+## Excel Processing Flow
+
+```text
+Excel Upload
+    ↓
+Workbook Validation
+    ↓
+Sheet Validation
+    ↓
+Column Validation
+    ↓
+Load to raw schema
+    ↓
+Data Quality Checks
+    ↓
+Clean Layer
+    ↓
+ABC/XYZ
+    ↓
+Business Analytics
+    ↓
+Reporting
+```
+
+---
+
+# Excel Template
+
+The application can generate an empty Excel workbook containing the exact column structure required by the database.
+
+Use:
+
+```text
+Download Excel Template
+```
+
+The generated file is:
+
+```text
+sales_data_template.xlsx
+```
+
+---
+
+# Sample Excel Dataset
+
+The application can export the current PostgreSQL raw dataset to Excel.
+
+Use:
+
+```text
+Download Sample Excel
+```
+
+The generated file is:
+
+```text
+sales_data_sample.xlsx
+```
+
+This file can be uploaded back into the application to test the complete Excel ingestion pipeline.
+
+---
+
+# Data Quality Issues Page
+
+After the pipeline completes, the user can open:
+
+```text
+View Data Quality Issues
+```
+
+The page displays:
+
+```text
+Check
+Table
+Issue Type
+Row Key
+Detail
+```
+
+This makes the detected data problems visible without directly querying PostgreSQL.
+
+---
+
+# Excel Analytics Report
+
+After analysis, the system can generate:
+
+```text
+data_quality_report.xlsx
+```
+
+The report contains multiple sheets:
+
+```text
+Summary
+Issue Summary
+Issues
+
+Clean Products
+Clean Customers
+Clean Sales
+Clean Promotions
+
+ABC_XYZ
+
+KPI Summary
+Product Sales
+Customer Sales
+Channel Sales
+Manager Sales
+Monthly Sales
+
+Promo Analysis
+```
+
+The exported worksheets include:
+
+- frozen headers;
+- filters;
+- automatically adjusted column widths.
+
+---
+
+# ABC Analysis
+
+ABC analysis classifies products by cumulative revenue contribution.
 
 Default thresholds:
 
-- A: first 80% of cumulative revenue
-- B: next 15%
-- C: remaining 5%
+```text
+A: first 80% of cumulative revenue
+B: next 15%
+C: remaining 5%
+```
 
-The thresholds are configurable in `.env`.
+The thresholds are configurable through environment variables:
 
-## XYZ Analysis
+```env
+ABC_A_THRESHOLD=0.80
+ABC_B_THRESHOLD=0.95
+```
 
-XYZ analysis classifies products based on demand variability.
+---
 
-The project uses the coefficient of variation:
+# XYZ Analysis
+
+XYZ analysis measures demand stability using the coefficient of variation.
 
 ```text
-Coefficient of Variation = Standard Deviation / Mean
+CV = Standard Deviation / Mean
 ```
 
 Default thresholds:
 
-- X: CV <= 0.10
-- Y: 0.10 < CV <= 0.25
-- Z: CV > 0.25
+```text
+X <= 0.10
+Y <= 0.25
+Z > 0.25
+```
 
-The thresholds are configurable in `.env`.
+Environment variables:
+
+```env
+XYZ_X_THRESHOLD=0.10
+XYZ_Y_THRESHOLD=0.25
+```
+
+---
+
+# Business KPIs
+
+The analytics pipeline calculates:
+
+```text
+Revenue
+Orders
+Customers
+Products Sold
+Average Order Value
+Gross Profit
+Gross Margin %
+```
+
+Basic formulas:
+
+```text
+Revenue =
+Quantity × Unit Price
+```
+
+```text
+Gross Profit =
+Revenue - Cost
+```
+
+```text
+Margin % =
+Gross Profit / Revenue × 100
+```
+
+```text
+Average Order Value =
+Revenue / Number of Orders
+```
+
+---
+
+# Promotion Analysis
+
+The project compares the promotion period with an equal-duration baseline period before the campaign.
+
+Metrics include:
+
+```text
+Revenue Before
+Revenue During
+
+Quantity Before
+Quantity During
+
+Revenue Uplift %
+Quantity Uplift %
+```
+
+Example:
+
+```text
+Revenue before = 1,000,000
+Revenue during = 1,250,000
+
+Revenue uplift = 25%
+```
+
+In a production environment, additional factors should also be considered:
+
+- gross profit;
+- margin;
+- seasonality;
+- customer segmentation;
+- control groups.
+
+---
+
+# Power BI
+
+The PostgreSQL analytics layer is designed for direct Power BI consumption.
+
+Recommended dashboard pages:
+
+## Executive Overview
+
+```text
+Total Revenue
+Orders
+Average Order Value
+Gross Profit
+Gross Margin %
+
+Monthly Revenue
+Revenue by Channel
+Revenue by Manager
+```
+
+## Product Analysis
+
+```text
+Top Products
+Revenue by Category
+Revenue by Brand
+ABC Distribution
+XYZ Distribution
+ABC/XYZ Matrix
+```
+
+## Customer Analysis
+
+```text
+Top Customers
+Revenue by Customer Type
+Revenue by City
+Average Order Value
+```
 
 ## Promotion Analysis
 
-For every promotion, the project compares:
-
-- revenue before the promotion
-- revenue during the promotion
-- quantity before the promotion
-- quantity during the promotion
-- revenue uplift percentage
-- quantity uplift percentage
-
-This makes it possible to answer whether a promotion increased business performance.
-
-## Main KPIs
-
-The project calculates:
-
-- total revenue
-- number of orders
-- number of customers
-- number of products sold
-- average order value
-- gross profit
-- gross margin percentage
-
-## Running the Project
-
-### 1. Start Docker
-
-```powershell
-docker compose up --build
+```text
+Revenue Before vs During
+Revenue Uplift
+Quantity Uplift
+Campaign Detail
 ```
 
-The analytics pipeline runs automatically after PostgreSQL becomes healthy.
-
-### 2. PostgreSQL connection from Windows
-
-Use these settings in DBeaver, Power BI, or another desktop database client:
+## Data Quality
 
 ```text
-Host: localhost
-Port: 55432
-Database: sales_quality
-Username: postgres
-Password: postgres
+Data Quality Score
+Total Issues
+Issues by Type
+Issues by Table
+Issues by Check
+Issue Detail
 ```
 
-### 3. pgAdmin
+---
+
+# Running the Project
+
+## 1. Clone the repository
+
+```bash
+git clone https://github.com/khachatryan1988/sales_data_quality.git
+```
+
+```bash
+cd sales_data_quality
+```
+
+---
+
+## 2. Create the environment file
+
+Copy:
+
+```text
+.env.example
+```
+
+to:
+
+```text
+.env
+```
+
+Example:
+
+```env
+COMPOSE_PROJECT_NAME=sales_data_quality
+
+POSTGRES_DB=sales_quality
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+
+POSTGRES_HOST_PORT=55432
+POSTGRES_CONTAINER_PORT=5432
+
+DB_HOST=db
+
+PGADMIN_EMAIL=admin@example.com
+PGADMIN_PASSWORD=admin
+PGADMIN_HOST_PORT=5050
+
+PRODUCT_COUNT=500
+CUSTOMER_COUNT=500
+SALES_COUNT=30000
+PROMOTION_COUNT=40
+RANDOM_SEED=42
+
+ABC_A_THRESHOLD=0.80
+ABC_B_THRESHOLD=0.95
+
+XYZ_X_THRESHOLD=0.10
+XYZ_Y_THRESHOLD=0.25
+```
+
+---
+
+# Start the Services
+
+```bash
+docker compose up -d db pgadmin web
+```
+
+Check containers:
+
+```bash
+docker compose ps
+```
+
+---
+
+# Web Interface
+
+Open:
+
+```text
+http://localhost:8002
+```
+
+---
+
+# pgAdmin
 
 Open:
 
@@ -353,224 +822,238 @@ Open:
 http://localhost:5050
 ```
 
-Default login:
+Default login from `.env`:
 
 ```text
-Email: admin@example.com
-Password: admin
+admin@example.com
+admin
 ```
 
-Create a PostgreSQL server connection inside pgAdmin with:
+When connecting from pgAdmin running inside Docker:
 
 ```text
 Host: db
 Port: 5432
 Database: sales_quality
-Username: postgres
+User: postgres
 Password: postgres
 ```
 
-`db` is used because pgAdmin and PostgreSQL communicate inside the Docker network.
+---
 
-## Re-running the Analytics Pipeline
+# External PostgreSQL Connection
 
-```powershell
+For DBeaver or Power BI on the Windows host:
+
+```text
+Host: localhost
+Port: 55432
+Database: sales_quality
+User: postgres
+Password: postgres
+```
+
+---
+
+# Run the Demo Pipeline
+
+The original synthetic-data workflow remains available.
+
+```bash
 docker compose run --rm analytics
 ```
 
-## Running Tests
+Execution order:
 
-```powershell
+```text
+generate_data.py
+load_raw.py
+quality_report.py
+clean_data.py
+abc_xyz.py
+business_analysis.py
+create_views.py
+```
+
+---
+
+# Run Tests
+
+```bash
 docker compose run --rm analytics pytest -q
 ```
 
-Expected result:
+Current test coverage includes:
+
+- revenue calculation;
+- margin calculation;
+- duplicate detection logic.
+
+---
+
+# Excel Upload Pipeline
+
+Excel uploads use a separate processing flow:
 
 ```text
-3 passed
+Excel
+↓
+excel_import.py
+↓
+raw schema
+↓
+quality_report.py
+↓
+clean_data.py
+↓
+abc_xyz.py
+↓
+business_analysis.py
+↓
+create_views.py
 ```
 
-## Stopping the Project
+This intentionally skips:
 
-```powershell
-docker compose down
+```text
+generate_data.py
+load_raw.py
 ```
 
-## Full Database Reset
+because uploaded data is already loaded into the PostgreSQL raw layer.
 
-This command removes the PostgreSQL Docker volume:
+---
 
-```powershell
-docker compose down -v
-docker compose up --build
-```
+# Example SQL Queries
 
-Use it only when you want to rebuild the database from scratch.
-
-## Useful SQL Examples
-
-### Total Revenue
+## Total Revenue
 
 ```sql
 SELECT
-    ROUND(SUM(revenue), 2) AS total_revenue
+    SUM(revenue)
 FROM clean.sales;
 ```
 
-### Number of Orders
+---
+
+## Number of Orders
 
 ```sql
 SELECT
-    COUNT(DISTINCT order_id) AS orders
+    COUNT(DISTINCT order_id)
 FROM clean.sales;
 ```
 
-### Sales by Category
+---
+
+## Top Products
 
 ```sql
 SELECT *
-FROM analytics.v_sales_by_category
-ORDER BY revenue DESC;
-```
-
-### Top 10 Products
-
-```sql
-SELECT
-    product_name,
-    revenue,
-    quantity,
-    gross_profit
 FROM analytics.product_sales
 ORDER BY revenue DESC
 LIMIT 10;
 ```
 
-### Top Customers
+---
+
+## Revenue by Channel
 
 ```sql
-SELECT
-    customer_name,
-    customer_type,
-    city,
-    revenue,
-    orders,
-    average_order_value
-FROM analytics.customer_sales
-ORDER BY revenue DESC
-LIMIT 10;
+SELECT *
+FROM analytics.channel_sales
+ORDER BY revenue DESC;
 ```
 
-### ABC / XYZ Distribution
+---
+
+## Revenue by Manager
+
+```sql
+SELECT *
+FROM analytics.manager_sales
+ORDER BY revenue DESC;
+```
+
+---
+
+## ABC/XYZ Distribution
 
 ```sql
 SELECT
     abc_xyz_class,
-    COUNT(*) AS product_count
+    COUNT(*) AS products
 FROM analytics.product_abc_xyz
 GROUP BY abc_xyz_class
 ORDER BY abc_xyz_class;
 ```
 
-### Data Quality Summary
+---
+
+## Data Quality Issues
 
 ```sql
 SELECT *
-FROM analytics.data_quality_summary
-ORDER BY error_count DESC;
+FROM analytics.data_quality_issues
+ORDER BY
+    table_name,
+    check_name;
 ```
 
-### Promotion Performance
+---
 
-```sql
-SELECT
-    campaign_name,
-    product_id,
-    discount_percent,
-    before_revenue,
-    during_revenue,
-    revenue_uplift_pct
-FROM analytics.promo_analysis
-ORDER BY revenue_uplift_pct DESC NULLS LAST;
+# Why This Project Was Built
+
+This project demonstrates practical skills required for analytics and Data Quality roles:
+
+- working with business data;
+- SQL analysis;
+- Python/Pandas data processing;
+- Data Quality validation;
+- ERP-style data relationships;
+- sales analysis;
+- product segmentation;
+- promotion analysis;
+- business KPI calculation;
+- Excel ingestion;
+- automated reporting;
+- PostgreSQL data modeling;
+- Docker deployment;
+- Power BI integration.
+
+---
+
+# Portfolio Value
+
+The project is designed to demonstrate the ability to work across the complete analytics lifecycle:
+
+```text
+Source Data
+→ Data Ingestion
+→ Validation
+→ Cleaning
+→ Data Modeling
+→ Business Analysis
+→ Reporting
+→ BI
 ```
 
-## Recommended Power BI Pages
+It also demonstrates the ability to combine software engineering skills with business analytics and Data Quality practices.
 
-### 1. Executive Overview
+---
 
-Recommended visuals:
+# Author
 
-- Revenue card
-- Orders card
-- Average Order Value card
-- Gross Profit card
-- Gross Margin card
-- Monthly revenue line chart
-- Revenue by channel
-- Revenue by manager
+**Khachatur Khachatryan**
 
-### 2. Product Analysis
+GitHub:
 
-Recommended visuals:
+```text
+https://github.com/khachatryan1988
+```
 
-- Top products by revenue
-- Revenue by category
-- Revenue by brand
-- ABC distribution
-- XYZ distribution
-- ABC/XYZ matrix
+Project repository:
 
-### 3. Customer Analysis
-
-Recommended visuals:
-
-- Top customers
-- Revenue by customer type
-- Revenue by city
-- Customer order frequency
-- Average order value
-
-### 4. Promotion Analysis
-
-Recommended visuals:
-
-- Revenue before vs. during promotion
-- Quantity before vs. during promotion
-- Revenue uplift percentage
-- Quantity uplift percentage
-- Promotion performance table
-
-### 5. Data Quality
-
-Recommended visuals:
-
-- Data Quality Score
-- Total issue count
-- Issues by type
-- Issues by table
-- Issues by check
-- Detailed issue table
-
-## Portfolio Value
-
-This project demonstrates the complete analytical workflow rather than only chart creation.
-
-It shows experience with:
-
-- relational databases
-- SQL
-- data validation
-- data cleaning
-- Python automation
-- business analysis
-- product segmentation
-- promotion analysis
-- Docker
-- BI data modeling
-- automated testing
-
-## Suggested CV Description
-
-**Sales & Data Quality Analytics System — Portfolio Project**
-
-Built an end-to-end analytics solution using Python, Pandas, PostgreSQL, Docker, SQL, and Power BI. Implemented automated checks for completeness, uniqueness, validity, and referential integrity; created raw, clean, and analytics data layers; performed ABC/XYZ product segmentation; analyzed customers, sales channels, managers, and promotion uplift; and produced BI-ready analytical marts for dashboarding.
+```text
+https://github.com/khachatryan1988/sales_data_quality
+```
