@@ -1,0 +1,324 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Data Quality
+{% endblock %}
+
+
+{% block content %}
+
+
+<h1 class="page-title">
+    Data Quality Dashboard
+</h1>
+
+<div class="page-subtitle">
+    Data validation and issue monitoring
+</div>
+
+
+<div class="cards">
+
+
+    <div class="card">
+
+        <div class="metric">
+
+            {{ "%.2f"|format(
+            score.data_quality_score_pct
+            or 0
+            ) }}%
+
+        </div>
+
+        <div class="metric-label">
+            Data Quality Score
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="metric">
+
+            {{ score.total_detected_issues
+            or 0
+            }}
+
+        </div>
+
+        <div class="metric-label">
+            Total Issues
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="metric">
+
+            {{ score.checked_rows
+            or 0
+            }}
+
+        </div>
+
+        <div class="metric-label">
+            Checked Rows
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<div class="grid-2">
+
+
+    <div class="chart-card">
+
+        <h3>
+            Issues by Type
+        </h3>
+
+        <div class="chart-wrap">
+
+            <canvas id="typeChart">
+            </canvas>
+
+        </div>
+
+    </div>
+
+
+    <div class="chart-card">
+
+        <h3>
+            Issues by Table
+        </h3>
+
+        <div class="chart-wrap">
+
+            <canvas id="tableChart">
+            </canvas>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<div class="table-card">
+
+
+    <div
+            class="actions"
+            style="
+            margin-bottom: 16px;
+        "
+    >
+
+        <a
+                href="/issues"
+                class="
+                button
+                button-red
+            "
+        >
+            View Issue Details
+        </a>
+
+
+        <a
+                href="/report"
+                class="
+                button
+                button-green
+            "
+        >
+            Download Excel Report
+        </a>
+
+    </div>
+
+
+    <h3>
+        Data Quality Checks
+    </h3>
+
+
+    <table>
+
+        <thead>
+
+        <tr>
+
+            <th>
+                Check
+            </th>
+
+            <th>
+                Table
+            </th>
+
+            <th>
+                Issue Type
+            </th>
+
+            <th>
+                Error Count
+            </th>
+
+        </tr>
+
+        </thead>
+
+
+        <tbody>
+
+
+        {% for row in summary %}
+
+        <tr>
+
+            <td>
+                {{ row.check_name }}
+            </td>
+
+            <td>
+                {{ row.table_name }}
+            </td>
+
+            <td>
+                {{ row.issue_type }}
+            </td>
+
+            <td>
+                {{ row.error_count }}
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+
+        </tbody>
+
+    </table>
+
+
+</div>
+
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+
+<script>
+
+
+    const options = {
+
+        responsive: true,
+
+        maintainAspectRatio: false
+
+    };
+
+
+    new Chart(
+
+        document.getElementById(
+            "typeChart"
+        ),
+
+        {
+
+            type: "doughnut",
+
+            data: {
+
+                labels:
+                    {{ by_type
+                        | map(attribute='issue_type')
+                        | list
+                        | tojson
+                    }},
+
+                datasets: [{
+
+                    data:
+                        {{ by_type
+                            | map(attribute='issues')
+                            | list
+                            | tojson
+                        }}
+
+                }]
+
+            },
+
+            options:
+                options
+
+        }
+
+    );
+
+
+    new Chart(
+
+        document.getElementById(
+            "tableChart"
+        ),
+
+        {
+
+            type: "bar",
+
+            data: {
+
+                labels:
+                    {{ by_table
+                        | map(attribute='table_name')
+                        | list
+                        | tojson
+                    }},
+
+                datasets: [{
+
+                    label:
+                        "Issues",
+
+                    data:
+                        {{ by_table
+                            | map(attribute='issues')
+                            | list
+                            | tojson
+                        }}
+
+                }]
+
+            },
+
+            options:
+                options
+
+        }
+
+    );
+
+
+</script>
+
+
+{% endblock %}

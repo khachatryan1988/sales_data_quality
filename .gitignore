@@ -10,3 +10,6 @@ __pycache__/
 app/data/raw/*.csv
 app/data/cleaned/*.csv
 app/data/output/*.csv
+app/data/uploads/*.xlsx
+app/data/uploads/*
+!app/data/uploads/.gitkeep

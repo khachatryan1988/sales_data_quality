@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Customer Analysis
+{% endblock %}
+
+
+{% block content %}
+
+
+<h1 class="page-title">
+    Customer Analysis
+</h1>
+
+<div class="page-subtitle">
+    Customer revenue, geography and segmentation
+</div>
+
+
+<div class="grid-2">
+
+
+    <div class="chart-card">
+
+        <h3>
+            Revenue by City
+        </h3>
+
+        <div class="chart-wrap">
+
+            <canvas id="cityChart">
+            </canvas>
+
+        </div>
+
+    </div>
+
+
+    <div class="chart-card">
+
+        <h3>
+            Revenue by Customer Type
+        </h3>
+
+        <div class="chart-wrap">
+
+            <canvas id="typeChart">
+            </canvas>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<div class="table-card">
+
+    <h3>
+        Top Customers
+    </h3>
+
+
+    <table>
+
+        <thead>
+
+        <tr>
+
+            <th>
+                Customer
+            </th>
+
+            <th>
+                City
+            </th>
+
+            <th>
+                Type
+            </th>
+
+            <th>
+                Revenue
+            </th>
+
+            <th>
+                Orders
+            </th>
+
+        </tr>
+
+        </thead>
+
+
+        <tbody>
+
+
+        {% for row in top_customers %}
+
+        <tr>
+
+            <td>
+                {{ row.customer_name }}
+            </td>
+
+            <td>
+                {{ row.city }}
+            </td>
+
+            <td>
+                {{ row.customer_type }}
+            </td>
+
+            <td>
+
+                {{ "{:,.0f}".format(
+                row.revenue or 0
+                ) }}
+
+            </td>
+
+            <td>
+                {{ row.orders }}
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+
+        </tbody>
+
+    </table>
+
+
+</div>
+
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+
+<script>
+
+
+    const options = {
+
+        responsive: true,
+
+        maintainAspectRatio: false
+
+    };
+
+
+    new Chart(
+
+        document.getElementById(
+            "cityChart"
+        ),
+
+        {
+
+            type: "bar",
+
+            data: {
+
+                labels:
+                    {{ by_city
+                        | map(attribute='city')
+                        | list
+                        | tojson
+                    }},
+
+                datasets: [{
+
+                    label:
+                        "Revenue",
+
+                    data:
+                        {{ by_city
+                            | map(attribute='revenue')
+                            | list
+                            | tojson
+                        }}
+
+                }]
+
+            },
+
+            options: {
+
+                ...options,
+
+                indexAxis: "y"
+
+            }
+
+        }
+
+    );
+
+
+    new Chart(
+
+        document.getElementById(
+            "typeChart"
+        ),
+
+        {
+
+            type: "doughnut",
+
+            data: {
+
+                labels:
+                    {{ by_type
+                        | map(attribute='customer_type')
+                        | list
+                        | tojson
+                    }},
+
+                datasets: [{
+
+                    data:
+                        {{ by_type
+                            | map(attribute='revenue')
+                            | list
+                            | tojson
+                        }}
+
+                }]
+
+            },
+
+            options:
+                options
+
+        }
+
+    );
+
+
+</script>
+
+
+{% endblock %}

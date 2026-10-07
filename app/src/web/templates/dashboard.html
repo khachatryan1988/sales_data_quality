@@ -1,0 +1,588 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Executive Overview
+{% endblock %}
+
+
+{% block content %}
+
+
+<h1 class="page-title">
+    Executive Overview
+</h1>
+
+<div class="page-subtitle">
+    Sales performance and key business KPIs
+</div>
+
+
+<div class="cards">
+
+
+    <div class="card">
+
+        <div class="metric">
+            {{ "{:,.0f}".format(
+            kpi.revenue or 0
+            ) }}
+        </div>
+
+        <div class="metric-label">
+            Total Revenue
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="metric">
+            {{ "{:,.0f}".format(
+            kpi.orders or 0
+            ) }}
+        </div>
+
+        <div class="metric-label">
+            Orders
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="metric">
+            {{ "{:,.0f}".format(
+            kpi.average_check or 0
+            ) }}
+        </div>
+
+        <div class="metric-label">
+            Average Order Value
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="metric">
+            {{ "{:,.0f}".format(
+            kpi.gross_profit or 0
+            ) }}
+        </div>
+
+        <div class="metric-label">
+            Gross Profit
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="metric">
+            {{ "%.2f"|format(
+            kpi.margin_pct or 0
+            ) }}%
+        </div>
+
+        <div class="metric-label">
+            Gross Margin
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<div class="chart-card">
+
+    <h3>
+        Monthly Revenue
+    </h3>
+
+    <div class="chart-wrap">
+
+        <canvas id="monthlyChart">
+        </canvas>
+
+    </div>
+
+</div>
+
+
+<br>
+
+
+<div class="grid-2">
+
+
+    <div class="chart-card">
+
+        <h3>
+            Revenue by Channel
+        </h3>
+
+        <div class="chart-wrap">
+
+            <canvas id="channelChart">
+            </canvas>
+
+        </div>
+
+    </div>
+
+
+    <div class="chart-card">
+
+        <h3>
+            Revenue by Manager
+        </h3>
+
+        <div class="chart-wrap">
+
+            <canvas id="managerChart">
+            </canvas>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<div class="grid-2">
+
+
+    <div class="chart-card">
+
+        <h3>
+            Revenue by Category
+        </h3>
+
+        <div class="chart-wrap">
+
+            <canvas id="categoryChart">
+            </canvas>
+
+        </div>
+
+    </div>
+
+
+    <div class="table-card">
+
+        <h3>
+            Top 10 Products
+        </h3>
+
+
+        <table>
+
+            <thead>
+
+            <tr>
+
+                <th>
+                    Product
+                </th>
+
+                <th>
+                    Revenue
+                </th>
+
+                <th>
+                    Orders
+                </th>
+
+            </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+            {% for row in top_products %}
+
+            <tr>
+
+                <td>
+                    {{ row.product_name }}
+                </td>
+
+                <td>
+                    {{ "{:,.0f}".format(
+                    row.revenue or 0
+                    ) }}
+                </td>
+
+                <td>
+                    {{ row.orders }}
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+
+            </tbody>
+
+        </table>
+
+
+    </div>
+
+
+</div>
+
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+
+<script>
+
+
+    const monthlyLabels =
+        {{ monthly_labels | tojson }};
+
+    const monthlyValues =
+        {{ monthly_values | tojson }};
+
+
+    const channelLabels =
+        {{ channel_labels | tojson }};
+
+    const channelValues =
+        {{ channel_values | tojson }};
+
+
+    const managerLabels =
+        {{ manager_labels | tojson }};
+
+    const managerValues =
+        {{ manager_values | tojson }};
+
+
+    const categoryLabels =
+        {{ category_labels | tojson }};
+
+    const categoryValues =
+        {{ category_values | tojson }};
+
+
+
+    const moneyFormatter = (value) => {
+
+        return new Intl.NumberFormat(
+            "en-US",
+            {
+                maximumFractionDigits: 0
+            }
+        ).format(value);
+
+    };
+
+
+
+    new Chart(
+
+        document.getElementById(
+            "monthlyChart"
+        ),
+
+        {
+
+            type: "line",
+
+            data: {
+
+                labels:
+                    monthlyLabels,
+
+                datasets: [{
+
+                    label:
+                        "Revenue",
+
+                    data:
+                        monthlyValues,
+
+                    tension:
+                        0.25,
+
+                    borderWidth:
+                        3,
+
+                    pointRadius:
+                        3
+
+                }]
+
+            },
+
+            options: {
+
+                responsive:
+                    true,
+
+                maintainAspectRatio:
+                    false,
+
+                scales: {
+
+                    y: {
+
+                        ticks: {
+
+                            callback:
+                                function(value) {
+
+                                    return moneyFormatter(
+                                        value
+                                    );
+
+                                }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    );
+
+
+
+    new Chart(
+
+        document.getElementById(
+            "channelChart"
+        ),
+
+        {
+
+            type:
+                "bar",
+
+            data: {
+
+                labels:
+                    channelLabels,
+
+                datasets: [{
+
+                    label:
+                        "Revenue",
+
+                    data:
+                        channelValues,
+
+                    borderWidth:
+                        1
+
+                }]
+
+            },
+
+            options: {
+
+                responsive:
+                    true,
+
+                maintainAspectRatio:
+                    false,
+
+                scales: {
+
+                    y: {
+
+                        beginAtZero:
+                            true,
+
+                        ticks: {
+
+                            callback:
+                                function(value) {
+
+                                    return moneyFormatter(
+                                        value
+                                    );
+
+                                }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    );
+
+
+
+    new Chart(
+
+        document.getElementById(
+            "managerChart"
+        ),
+
+        {
+
+            type:
+                "bar",
+
+            data: {
+
+                labels:
+                    managerLabels,
+
+                datasets: [{
+
+                    label:
+                        "Revenue",
+
+                    data:
+                        managerValues,
+
+                    borderWidth:
+                        1
+
+                }]
+
+            },
+
+            options: {
+
+                indexAxis:
+                    "y",
+
+                responsive:
+                    true,
+
+                maintainAspectRatio:
+                    false,
+
+                scales: {
+
+                    x: {
+
+                        beginAtZero:
+                            true,
+
+                        ticks: {
+
+                            callback:
+                                function(value) {
+
+                                    return moneyFormatter(
+                                        value
+                                    );
+
+                                }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    );
+
+
+
+    new Chart(
+
+        document.getElementById(
+            "categoryChart"
+        ),
+
+        {
+
+            type:
+                "bar",
+
+            data: {
+
+                labels:
+                    categoryLabels,
+
+                datasets: [{
+
+                    label:
+                        "Revenue",
+
+                    data:
+                        categoryValues,
+
+                    borderWidth:
+                        1
+
+                }]
+
+            },
+
+            options: {
+
+                responsive:
+                    true,
+
+                maintainAspectRatio:
+                    false,
+
+                scales: {
+
+                    y: {
+
+                        beginAtZero:
+                            true,
+
+                        ticks: {
+
+                            callback:
+                                function(value) {
+
+                                    return moneyFormatter(
+                                        value
+                                    );
+
+                                }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    );
+
+
+</script>
+
+
+{% endblock %}

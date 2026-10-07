@@ -1,96 +1,95 @@
 # Sales & Data Quality Analytics System
 
-An end-to-end portfolio project for **Data Analyst**, **Business Analyst**, and **Data Quality Analyst** roles.
+An end-to-end analytics and Data Quality portfolio project built with **Python, Pandas, PostgreSQL, SQL, FastAPI, Docker, Excel, Chart.js, and Power BI**.
 
-The project demonstrates how raw business data can be generated or uploaded from Excel, validated, cleaned, analyzed, stored in PostgreSQL, exported to Excel, and prepared for Power BI reporting.
+The system demonstrates a complete analytics workflow:
+
+```text
+Source Data
+→ Data Ingestion
+→ Data Quality Validation
+→ Cleaning
+→ Data Modeling
+→ Business Analytics
+→ Web Dashboard
+→ Excel Reporting
+→ Power BI
+```
+
+The project is designed as a portfolio project for roles such as:
+
+- Data Analyst
+- Data Quality Analyst
+- Business Analyst
+- Operations Analyst
+- Sales Analyst
 
 ---
 
-## Project Overview
+# Key Features
 
-The system supports two data ingestion workflows:
+The application supports:
 
-### Demo Data Mode
-
-```text
-Synthetic Data Generation
-        ↓
-PostgreSQL Raw Layer
-        ↓
-Data Quality Validation
-        ↓
-Clean Layer
-        ↓
-Business Analytics
-        ↓
-Power BI
-```
-
-### Excel Upload Mode
-
-```text
-Excel Workbook
-        ↓
-Structure Validation
-        ↓
-PostgreSQL Raw Layer
-        ↓
-Data Quality Validation
-        ↓
-Clean Layer
-        ↓
-ABC/XYZ Analysis
-        ↓
-Business Analytics
-        ↓
-Excel Report / Power BI
-```
-
----
-
-## Main Features
-
-The project includes:
-
-- synthetic business data generation;
+- synthetic demo data generation;
 - Excel workbook upload;
 - Excel structure validation;
 - PostgreSQL raw data storage;
 - automated Data Quality checks;
-- clean data layer;
+- clean data layer creation;
 - ABC/XYZ product segmentation;
-- sales KPI calculation;
-- customer analysis;
+- business KPI calculation;
+- sales analysis;
 - product analysis;
+- customer analysis;
 - channel analysis;
-- manager performance analysis;
+- manager analysis;
 - promotion effectiveness analysis;
-- BI-ready analytical marts;
+- built-in web analytics dashboard;
+- Data Quality dashboard;
+- individual Data Quality issue browser;
+- Excel template generation;
+- sample Excel export;
+- full Excel analytics report export;
 - Power BI integration;
-- downloadable Excel templates;
-- downloadable sample datasets;
-- Data Quality issue browser;
-- downloadable Excel analytics report;
-- Docker-based deployment.
+- Docker-based deployment;
+- automated tests.
 
 ---
 
 # Technology Stack
 
+## Backend
+
 - Python 3.12
+- FastAPI
 - Pandas
 - NumPy
-- PostgreSQL 16
 - SQLAlchemy
 - psycopg2
-- FastAPI
-- Uvicorn
-- Jinja2
+
+## Database
+
+- PostgreSQL 16
+- SQL
+
+## Data Processing
+
+- Pandas
 - openpyxl
+
+## Visualization
+
+- Chart.js
+- Power BI
+
+## Infrastructure
+
 - Docker
 - Docker Compose
 - pgAdmin
-- Power BI
+
+## Testing
+
 - pytest
 
 ---
@@ -99,14 +98,14 @@ The project includes:
 
 ```text
                     ┌─────────────────────┐
-                    │   Data Sources      │
+                    │    Data Sources     │
                     │                     │
                     │ Synthetic / Excel   │
                     └──────────┬──────────┘
                                │
                                ▼
                     ┌─────────────────────┐
-                    │      raw schema     │
+                    │     raw schema      │
                     │                     │
                     │ products            │
                     │ customers           │
@@ -144,12 +143,20 @@ The project includes:
                     │ promotions          │
                     └──────────┬──────────┘
                                │
-                 ┌─────────────┴─────────────┐
-                 ▼                           ▼
-       ┌──────────────────┐       ┌──────────────────┐
-       │ Excel Reporting  │       │     Power BI     │
-       └──────────────────┘       └──────────────────┘
+             ┌─────────────────┼─────────────────┐
+             │                 │                 │
+             ▼                 ▼                 ▼
+      Web Dashboard      Excel Reports       Power BI
 ```
+
+The `analytics` PostgreSQL schema is independent from the reporting tool.
+
+This means the same analytical data can be consumed by:
+
+- the built-in FastAPI web dashboard;
+- generated Excel reports;
+- Power BI;
+- another external BI platform.
 
 ---
 
@@ -197,12 +204,19 @@ sales_data_quality/
         ├── excel_import.py
         │
         └── web/
+            │
             ├── __init__.py
             ├── main.py
             │
             └── templates/
+                ├── base.html
                 ├── index.html
                 ├── result.html
+                ├── dashboard.html
+                ├── products.html
+                ├── customers.html
+                ├── promotions.html
+                ├── data_quality.html
                 └── issues.html
 ```
 
@@ -210,11 +224,13 @@ sales_data_quality/
 
 # PostgreSQL Data Layers
 
-The project separates data into three PostgreSQL schemas.
+The project uses three separate PostgreSQL schemas.
 
-## raw
+---
 
-Stores source data without business cleaning.
+## 1. raw
+
+The `raw` schema stores source data before business cleaning.
 
 Tables:
 
@@ -225,13 +241,15 @@ raw.sales
 raw.promotions
 ```
 
-The raw layer preserves the source dataset so Data Quality issues remain traceable.
+The raw layer preserves the original source data.
+
+This is important because Data Quality problems must remain traceable.
 
 ---
 
-## clean
+## 2. clean
 
-Stores validated datasets after Data Quality rules are applied.
+The `clean` schema contains validated data after Data Quality rules have been applied.
 
 Tables:
 
@@ -242,13 +260,15 @@ clean.sales
 clean.promotions
 ```
 
+Invalid or unusable records are excluded from this layer.
+
 ---
 
-## analytics
+## 3. analytics
 
-Stores analytical tables, KPI outputs, Data Quality results, and BI-ready views.
+The `analytics` schema contains business-ready analytical tables and views.
 
-Main objects include:
+Main objects:
 
 ```text
 analytics.data_quality_issues
@@ -277,11 +297,15 @@ analytics.v_monthly_sales
 
 # Data Quality Framework
 
-The project automatically checks multiple Data Quality dimensions.
+The project validates multiple Data Quality dimensions.
+
+---
 
 ## Completeness
 
-Example:
+Checks whether required data exists.
+
+Examples:
 
 ```text
 Missing barcode
@@ -289,7 +313,7 @@ Missing category
 Missing required values
 ```
 
-SQL example:
+Example SQL:
 
 ```sql
 SELECT *
@@ -301,19 +325,21 @@ WHERE barcode IS NULL;
 
 ## Uniqueness
 
-Example:
+Checks whether values that should be unique are duplicated.
+
+Examples:
 
 ```text
 Duplicate barcode
 Duplicate sales records
 ```
 
-SQL example:
+Example:
 
 ```sql
 SELECT
     barcode,
-    COUNT(*)
+    COUNT(*) AS cnt
 FROM raw.products
 WHERE barcode IS NOT NULL
 GROUP BY barcode
@@ -324,21 +350,25 @@ HAVING COUNT(*) > 1;
 
 ## Validity
 
-Example:
+Checks whether values satisfy defined business rules.
+
+Examples:
 
 ```text
 Negative quantity
-Invalid sales price
-Sales price below allowed business rule
+Invalid price
+Invalid unit price
 ```
 
 ---
 
 ## Referential Integrity
 
+Checks whether referenced entities actually exist.
+
 Example:
 
-A sales record references a product that does not exist.
+A sales record references a product that is missing from the product master.
 
 ```sql
 SELECT s.*
@@ -352,43 +382,47 @@ WHERE p.product_id IS NULL;
 
 # Demo Dataset
 
-The default synthetic dataset contains approximately:
+The default generated dataset contains approximately:
 
 ```text
-Products:     500
-Customers:    500
-Sales:     30,003
-Promotions:    40
+Products:        500
+Customers:       500
+Sales:        30,003
+Promotions:       40
 ```
 
-Intentional Data Quality problems are inserted into the generated data so the validation pipeline can detect and report them.
+Intentional Data Quality problems are inserted into the synthetic dataset.
 
-Example issues include:
+Examples:
 
 - missing barcodes;
 - duplicate barcodes;
 - missing categories;
-- invalid product prices;
+- invalid prices;
 - negative quantity;
 - invalid unit price;
 - unknown product IDs;
 - unknown customer IDs;
 - duplicate sales records.
 
-A typical pipeline run detects:
+A typical run produces:
 
 ```text
 Data Quality Issues: 105
 Data Quality Score:   99.66%
+Clean Products:       481
+Clean Customers:      500
+Clean Sales:        28,858
+Clean Promotions:      39
 ```
 
-The score is a simplified portfolio metric and should not be interpreted as a universal production-grade Data Quality methodology.
+The Data Quality Score is a simplified portfolio metric and is not intended to represent a universal production Data Quality methodology.
 
 ---
 
 # Excel Upload
 
-The project includes a FastAPI web interface for uploading business datasets.
+The application provides a browser-based Excel ingestion interface.
 
 Open:
 
@@ -396,9 +430,10 @@ Open:
 http://localhost:8002
 ```
 
-The interface supports:
+The page supports:
 
 ```text
+Open Analytics Dashboard
 Download Excel Template
 Download Sample Excel
 Upload & Run Analysis
@@ -406,9 +441,9 @@ Upload & Run Analysis
 
 ---
 
-## Required Excel Sheets
+# Required Excel Structure
 
-An uploaded workbook must contain:
+An uploaded workbook must contain four sheets:
 
 ```text
 products
@@ -417,39 +452,47 @@ sales
 promotions
 ```
 
-The column names must match the current PostgreSQL `raw` table structure.
+The workbook must be:
+
+```text
+.xlsx
+```
+
+Column names must match the current PostgreSQL `raw` table structure.
 
 ---
 
-## Excel Processing Flow
+# Excel Upload Flow
 
 ```text
-Excel Upload
-    ↓
-Workbook Validation
-    ↓
+Excel Workbook
+      ↓
+File Validation
+      ↓
 Sheet Validation
-    ↓
+      ↓
 Column Validation
-    ↓
-Load to raw schema
-    ↓
-Data Quality Checks
-    ↓
-Clean Layer
-    ↓
+      ↓
+PostgreSQL raw
+      ↓
+Data Quality
+      ↓
+PostgreSQL clean
+      ↓
 ABC/XYZ
-    ↓
+      ↓
 Business Analytics
-    ↓
-Reporting
+      ↓
+PostgreSQL analytics
+      ↓
+Web Dashboard / Excel / Power BI
 ```
 
 ---
 
 # Excel Template
 
-The application can generate an empty Excel workbook containing the exact column structure required by the database.
+The web application can generate an empty workbook containing the exact required database structure.
 
 Use:
 
@@ -457,17 +500,26 @@ Use:
 Download Excel Template
 ```
 
-The generated file is:
+Generated file:
 
 ```text
 sales_data_template.xlsx
+```
+
+Sheets:
+
+```text
+products
+customers
+sales
+promotions
 ```
 
 ---
 
 # Sample Excel Dataset
 
-The application can export the current PostgreSQL raw dataset to Excel.
+The application can export the current PostgreSQL raw layer into Excel.
 
 Use:
 
@@ -475,25 +527,150 @@ Use:
 Download Sample Excel
 ```
 
-The generated file is:
+Generated file:
 
 ```text
 sales_data_sample.xlsx
 ```
 
-This file can be uploaded back into the application to test the complete Excel ingestion pipeline.
+The sample file can be uploaded back into the system to test the complete ingestion workflow.
 
 ---
 
-# Data Quality Issues Page
+# Web Analytics Dashboard
 
-After the pipeline completes, the user can open:
+The project includes a built-in web analytics interface.
+
+The web dashboard uses the same PostgreSQL analytics layer as Power BI.
+
+---
+
+## Executive Overview
+
+URL:
 
 ```text
-View Data Quality Issues
+http://localhost:8002/dashboard
 ```
 
-The page displays:
+Includes:
+
+```text
+Total Revenue
+Orders
+Average Order Value
+Gross Profit
+Gross Margin %
+
+Monthly Revenue
+
+Revenue by Channel
+Revenue by Manager
+Revenue by Category
+
+Top Products
+```
+
+---
+
+## Product Analysis
+
+URL:
+
+```text
+http://localhost:8002/products
+```
+
+Includes:
+
+```text
+Revenue by Category
+Revenue by Brand
+
+ABC Distribution
+XYZ Distribution
+
+ABC/XYZ Matrix
+
+Top Products
+```
+
+---
+
+## Customer Analysis
+
+URL:
+
+```text
+http://localhost:8002/customers
+```
+
+Includes:
+
+```text
+Revenue by City
+Revenue by Customer Type
+Top Customers
+Orders by Customer
+```
+
+---
+
+## Promotion Analysis
+
+URL:
+
+```text
+http://localhost:8002/promotions
+```
+
+Includes:
+
+```text
+Revenue Before Promotion
+Revenue During Promotion
+
+Revenue Uplift %
+Quantity Uplift %
+
+Campaign Performance
+```
+
+Positive and negative uplift values are visually distinguished.
+
+---
+
+## Data Quality Dashboard
+
+URL:
+
+```text
+http://localhost:8002/data-quality
+```
+
+Includes:
+
+```text
+Data Quality Score
+Total Issues
+Checked Rows
+
+Issues by Type
+Issues by Table
+Data Quality Checks
+```
+
+---
+
+# Data Quality Issue Details
+
+URL:
+
+```text
+http://localhost:8002/issues
+```
+
+Displays:
 
 ```text
 Check
@@ -503,19 +680,19 @@ Row Key
 Detail
 ```
 
-This makes the detected data problems visible without directly querying PostgreSQL.
+This allows Data Quality problems to be reviewed directly from the browser without manually querying PostgreSQL.
 
 ---
 
 # Excel Analytics Report
 
-After analysis, the system can generate:
+The system can generate a complete analytical workbook:
 
 ```text
 data_quality_report.xlsx
 ```
 
-The report contains multiple sheets:
+The workbook contains:
 
 ```text
 Summary
@@ -539,27 +716,27 @@ Monthly Sales
 Promo Analysis
 ```
 
-The exported worksheets include:
+Exported worksheets include:
 
 - frozen headers;
-- filters;
+- automatic filters;
 - automatically adjusted column widths.
 
 ---
 
 # ABC Analysis
 
-ABC analysis classifies products by cumulative revenue contribution.
+ABC analysis measures product economic importance using cumulative revenue.
 
 Default thresholds:
 
 ```text
-A: first 80% of cumulative revenue
-B: next 15%
-C: remaining 5%
+A = first 80% of cumulative revenue
+B = next 15%
+C = remaining 5%
 ```
 
-The thresholds are configurable through environment variables:
+Configuration:
 
 ```env
 ABC_A_THRESHOLD=0.80
@@ -570,13 +747,16 @@ ABC_B_THRESHOLD=0.95
 
 # XYZ Analysis
 
-XYZ analysis measures demand stability using the coefficient of variation.
+XYZ analysis measures demand stability.
+
+The coefficient of variation is used:
 
 ```text
-CV = Standard Deviation / Mean
+CV =
+Standard Deviation / Mean
 ```
 
-Default thresholds:
+Default configuration:
 
 ```text
 X <= 0.10
@@ -593,9 +773,42 @@ XYZ_Y_THRESHOLD=0.25
 
 ---
 
-# Business KPIs
+# ABC / XYZ Business Interpretation
 
-The analytics pipeline calculates:
+Examples:
+
+```text
+AX
+High economic importance
++
+Stable demand
+```
+
+This group should usually receive high inventory availability.
+
+```text
+AZ
+High economic importance
++
+Unstable demand
+```
+
+This group requires more careful inventory planning.
+
+```text
+CZ
+Low economic importance
++
+Unstable demand
+```
+
+This group may require assortment or stock-policy review.
+
+---
+
+# Sales KPIs
+
+The project calculates:
 
 ```text
 Revenue
@@ -607,33 +820,49 @@ Gross Profit
 Gross Margin %
 ```
 
-Basic formulas:
+---
+
+## Revenue
 
 ```text
 Revenue =
 Quantity × Unit Price
 ```
 
+---
+
+## Gross Profit
+
 ```text
 Gross Profit =
-Revenue - Cost
+Revenue - Gross Cost
 ```
+
+---
+
+## Gross Margin
 
 ```text
 Margin % =
 Gross Profit / Revenue × 100
 ```
 
+---
+
+## Average Order Value
+
 ```text
 Average Order Value =
 Revenue / Number of Orders
 ```
 
+The project uses distinct order IDs when calculating the order count.
+
 ---
 
 # Promotion Analysis
 
-The project compares the promotion period with an equal-duration baseline period before the campaign.
+Promotion performance is compared with an equal-duration baseline period immediately before the campaign.
 
 Metrics include:
 
@@ -648,30 +877,64 @@ Revenue Uplift %
 Quantity Uplift %
 ```
 
-Example:
+Formula:
 
 ```text
-Revenue before = 1,000,000
-Revenue during = 1,250,000
-
-Revenue uplift = 25%
+Revenue Uplift % =
+(Revenue During - Revenue Before)
+/
+Revenue Before
+× 100
 ```
 
-In a production environment, additional factors should also be considered:
+In a real production environment, additional metrics should also be considered:
 
 - gross profit;
 - margin;
 - seasonality;
 - customer segmentation;
-- control groups.
+- control groups;
+- repeat purchases.
 
 ---
 
 # Power BI
 
-The PostgreSQL analytics layer is designed for direct Power BI consumption.
+Power BI remains fully supported.
 
-Recommended dashboard pages:
+The project deliberately keeps analytics logic outside the BI tool.
+
+Power BI connects directly to the PostgreSQL analytics layer.
+
+Windows connection:
+
+```text
+Host: localhost
+Port: 55432
+Database: sales_quality
+User: postgres
+Password: postgres
+```
+
+Recommended tables:
+
+```text
+analytics.kpi_summary
+analytics.monthly_sales
+analytics.product_sales
+analytics.customer_sales
+analytics.channel_sales
+analytics.manager_sales
+analytics.product_abc_xyz
+analytics.promo_analysis
+analytics.data_quality_score
+analytics.data_quality_summary
+analytics.data_quality_issues
+```
+
+---
+
+# Recommended Power BI Pages
 
 ## Executive Overview
 
@@ -737,13 +1000,15 @@ Issue Detail
 git clone https://github.com/khachatryan1988/sales_data_quality.git
 ```
 
+Then:
+
 ```bash
 cd sales_data_quality
 ```
 
 ---
 
-## 2. Create the environment file
+# Environment Configuration
 
 Copy:
 
@@ -779,6 +1044,7 @@ PRODUCT_COUNT=500
 CUSTOMER_COUNT=500
 SALES_COUNT=30000
 PROMOTION_COUNT=40
+
 RANDOM_SEED=42
 
 ABC_A_THRESHOLD=0.80
@@ -790,7 +1056,7 @@ XYZ_Y_THRESHOLD=0.25
 
 ---
 
-# Start the Services
+# Start Database, pgAdmin and Web Application
 
 ```bash
 docker compose up -d db pgadmin web
@@ -804,12 +1070,22 @@ docker compose ps
 
 ---
 
-# Web Interface
+# Web Application
 
 Open:
 
 ```text
 http://localhost:8002
+```
+
+---
+
+# Web Dashboard
+
+Open:
+
+```text
+http://localhost:8002/dashboard
 ```
 
 ---
@@ -822,14 +1098,14 @@ Open:
 http://localhost:5050
 ```
 
-Default login from `.env`:
+Example login:
 
 ```text
 admin@example.com
 admin
 ```
 
-When connecting from pgAdmin running inside Docker:
+Inside Docker connect using:
 
 ```text
 Host: db
@@ -841,9 +1117,9 @@ Password: postgres
 
 ---
 
-# External PostgreSQL Connection
+# DBeaver / Power BI Connection
 
-For DBeaver or Power BI on the Windows host:
+From Windows:
 
 ```text
 Host: localhost
@@ -855,9 +1131,11 @@ Password: postgres
 
 ---
 
-# Run the Demo Pipeline
+# Run Demo Pipeline
 
-The original synthetic-data workflow remains available.
+The original demo pipeline remains available.
+
+Run:
 
 ```bash
 docker compose run --rm analytics
@@ -875,29 +1153,39 @@ business_analysis.py
 create_views.py
 ```
 
----
+Typical successful output:
 
-# Run Tests
+```text
+Raw data generated.
 
-```bash
-docker compose run --rm analytics pytest -q
+Loaded raw.products: 500
+Loaded raw.customers: 500
+Loaded raw.sales: 30,003
+Loaded raw.promotions: 40
+
+Data quality issues: 105
+
+Clean products: 481
+Clean customers: 500
+Clean sales rows: 28,858
+Clean promotions: 39
+
+ABC/XYZ created.
+Business analytics marts created.
+Analytics views created.
+
+PIPELINE COMPLETED SUCCESSFULLY
 ```
-
-Current test coverage includes:
-
-- revenue calculation;
-- margin calculation;
-- duplicate detection logic.
 
 ---
 
 # Excel Upload Pipeline
 
-Excel uploads use a separate processing flow:
+Excel uploads use a separate pipeline.
+
+Execution flow:
 
 ```text
-Excel
-↓
 excel_import.py
 ↓
 raw schema
@@ -913,14 +1201,30 @@ business_analysis.py
 create_views.py
 ```
 
-This intentionally skips:
+It intentionally does not run:
 
 ```text
 generate_data.py
 load_raw.py
 ```
 
-because uploaded data is already loaded into the PostgreSQL raw layer.
+because the uploaded Excel workbook is already the source dataset.
+
+---
+
+# Tests
+
+Run:
+
+```bash
+docker compose run --rm analytics pytest -q
+```
+
+Current tests include:
+
+- revenue calculation;
+- margin calculation;
+- duplicate detection.
 
 ---
 
@@ -936,7 +1240,7 @@ FROM clean.sales;
 
 ---
 
-## Number of Orders
+## Orders
 
 ```sql
 SELECT
@@ -1002,43 +1306,92 @@ ORDER BY
 
 ---
 
-# Why This Project Was Built
+# Why the Project Uses raw / clean / analytics
 
-This project demonstrates practical skills required for analytics and Data Quality roles:
+The project separates responsibilities between data layers.
 
-- working with business data;
-- SQL analysis;
-- Python/Pandas data processing;
-- Data Quality validation;
-- ERP-style data relationships;
-- sales analysis;
-- product segmentation;
-- promotion analysis;
-- business KPI calculation;
-- Excel ingestion;
-- automated reporting;
-- PostgreSQL data modeling;
-- Docker deployment;
-- Power BI integration.
+```text
+raw
+```
+
+Preserves original source data.
+
+```text
+clean
+```
+
+Contains validated and trusted data.
+
+```text
+analytics
+```
+
+Contains business-ready tables and metrics.
+
+This design improves:
+
+- traceability;
+- maintainability;
+- Data Quality control;
+- reporting performance;
+- reproducibility.
 
 ---
 
-# Portfolio Value
+# Why the Project Uses Both Web Dashboard and Power BI
 
-The project is designed to demonstrate the ability to work across the complete analytics lifecycle:
+The analytical logic does not depend on one visualization tool.
 
 ```text
-Source Data
-→ Data Ingestion
-→ Validation
-→ Cleaning
-→ Data Modeling
-→ Business Analysis
-→ Reporting
-→ BI
+PostgreSQL analytics
+        ↓
+    ┌───┼────────┐
+    ↓   ↓        ↓
+   Web Excel   Power BI
 ```
 
-It also demonstrates the ability to combine software engineering skills with business analytics and Data Quality practices.
+The built-in dashboard is useful for direct application access.
+
+Power BI remains useful for:
+
+- self-service BI;
+- interactive reporting;
+- business presentations;
+- enterprise dashboards.
+
+---
+
+# Portfolio Skills Demonstrated
+
+This project demonstrates practical experience with:
+
+- Python;
+- Pandas;
+- SQL;
+- PostgreSQL;
+- Data Quality;
+- data cleaning;
+- relational data;
+- Data Analytics;
+- ABC/XYZ;
+- promotion analysis;
+- business KPIs;
+- Excel ingestion;
+- Excel reporting;
+- FastAPI;
+- web dashboards;
+- Chart.js;
+- Docker;
+- Power BI;
+- Git / GitHub.
+
+---
+
+# Interview Summary
+
+A concise way to explain the project:
+
+> I built an end-to-end Sales & Data Quality Analytics System using Python, Pandas, PostgreSQL, SQL, Docker, FastAPI, Excel, Chart.js, and Power BI. The system supports both synthetic data generation and Excel uploads. Data passes through raw, clean, and analytics layers. I implemented automated Data Quality checks, ABC/XYZ product segmentation, sales and promotion analytics, web dashboards, Excel reporting, and Power BI-ready analytical marts.
 
 ---
 
@@ -1052,7 +1405,7 @@ GitHub:
 https://github.com/khachatryan1988
 ```
 
-Project repository:
+Repository:
 
 ```text
 https://github.com/khachatryan1988/sales_data_quality

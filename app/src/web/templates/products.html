@@ -1,0 +1,408 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Product Analysis
+{% endblock %}
+
+
+{% block content %}
+
+
+<h1 class="page-title">
+    Product Analysis
+</h1>
+
+<div class="page-subtitle">
+    Product performance and ABC/XYZ segmentation
+</div>
+
+
+<div class="grid-2">
+
+
+    <div class="chart-card">
+
+        <h3>
+            Revenue by Category
+        </h3>
+
+        <div class="chart-wrap">
+
+            <canvas id="categoryChart">
+            </canvas>
+
+        </div>
+
+    </div>
+
+
+    <div class="chart-card">
+
+        <h3>
+            Top Brands by Revenue
+        </h3>
+
+        <div class="chart-wrap">
+
+            <canvas id="brandChart">
+            </canvas>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<div class="grid-2">
+
+
+    <div class="chart-card">
+
+        <h3>
+            ABC Distribution
+        </h3>
+
+        <div class="chart-wrap">
+
+            <canvas id="abcChart">
+            </canvas>
+
+        </div>
+
+    </div>
+
+
+    <div class="chart-card">
+
+        <h3>
+            XYZ Distribution
+        </h3>
+
+        <div class="chart-wrap">
+
+            <canvas id="xyzChart">
+            </canvas>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<div class="grid-2">
+
+
+    <div class="table-card">
+
+        <h3>
+            ABC / XYZ Matrix
+        </h3>
+
+        <table>
+
+            <thead>
+
+            <tr>
+
+                <th>
+                    Class
+                </th>
+
+                <th>
+                    Products
+                </th>
+
+            </tr>
+
+            </thead>
+
+
+            <tbody>
+
+            {% for row in matrix %}
+
+            <tr>
+
+                <td>
+                    {{ row.abc_xyz_class }}
+                </td>
+
+                <td>
+                    {{ row.products }}
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <div class="table-card">
+
+        <h3>
+            Top Products
+        </h3>
+
+        <table>
+
+            <thead>
+
+            <tr>
+
+                <th>
+                    Product
+                </th>
+
+                <th>
+                    Revenue
+                </th>
+
+                <th>
+                    Orders
+                </th>
+
+            </tr>
+
+            </thead>
+
+
+            <tbody>
+
+            {% for row in top_products %}
+
+            <tr>
+
+                <td>
+                    {{ row.product_name }}
+                </td>
+
+                <td>
+
+                    {{ "{:,.0f}".format(
+                    row.revenue or 0
+                    ) }}
+
+                </td>
+
+                <td>
+                    {{ row.orders }}
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+</div>
+
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+
+<script>
+
+
+    const options = {
+
+        responsive: true,
+
+        maintainAspectRatio: false
+
+    };
+
+
+    new Chart(
+
+        document.getElementById(
+            "categoryChart"
+        ),
+
+        {
+
+            type: "bar",
+
+            data: {
+
+                labels:
+                    {{ categories
+                        | map(attribute='category')
+                        | list
+                        | tojson
+                    }},
+
+                datasets: [{
+
+                    label:
+                        "Revenue",
+
+                    data:
+                        {{ categories
+                            | map(attribute='revenue')
+                            | list
+                            | tojson
+                        }}
+
+                }]
+
+            },
+
+            options:
+                options
+
+        }
+
+    );
+
+
+    new Chart(
+
+        document.getElementById(
+            "brandChart"
+        ),
+
+        {
+
+            type: "bar",
+
+            data: {
+
+                labels:
+                    {{ brands
+                        | map(attribute='brand')
+                        | list
+                        | tojson
+                    }},
+
+                datasets: [{
+
+                    label:
+                        "Revenue",
+
+                    data:
+                        {{ brands
+                            | map(attribute='revenue')
+                            | list
+                            | tojson
+                        }}
+
+                }]
+
+            },
+
+            options: {
+
+                ...options,
+
+                indexAxis: "y"
+
+            }
+
+        }
+
+    );
+
+
+    new Chart(
+
+        document.getElementById(
+            "abcChart"
+        ),
+
+        {
+
+            type: "doughnut",
+
+            data: {
+
+                labels:
+                    {{ abc
+                        | map(attribute='abc_class')
+                        | list
+                        | tojson
+                    }},
+
+                datasets: [{
+
+                    data:
+                        {{ abc
+                            | map(attribute='products')
+                            | list
+                            | tojson
+                        }}
+
+                }]
+
+            },
+
+            options:
+                options
+
+        }
+
+    );
+
+
+    new Chart(
+
+        document.getElementById(
+            "xyzChart"
+        ),
+
+        {
+
+            type: "doughnut",
+
+            data: {
+
+                labels:
+                    {{ xyz
+                        | map(attribute='xyz_class')
+                        | list
+                        | tojson
+                    }},
+
+                datasets: [{
+
+                    data:
+                        {{ xyz
+                            | map(attribute='products')
+                            | list
+                            | tojson
+                        }}
+
+                }]
+
+            },
+
+            options:
+                options
+
+        }
+
+    );
+
+
+</script>
+
+
+{% endblock %}

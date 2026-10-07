@@ -1,0 +1,273 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Promotion Analysis
+{% endblock %}
+
+
+{% block content %}
+
+
+<h1 class="page-title">
+    Promotion Analysis
+</h1>
+
+<div class="page-subtitle">
+    Campaign performance and uplift analysis
+</div>
+
+
+<div class="chart-card">
+
+    <h3>
+        Revenue Before vs During Promotion
+    </h3>
+
+    <div class="chart-wrap tall">
+
+        <canvas id="promoChart">
+        </canvas>
+
+    </div>
+
+</div>
+
+
+<br>
+
+
+<div class="table-card">
+
+    <h3>
+        Promotion Performance
+    </h3>
+
+
+    <table>
+
+        <thead>
+
+        <tr>
+
+            <th>
+                Campaign
+            </th>
+
+            <th>
+                Revenue Before
+            </th>
+
+            <th>
+                Revenue During
+            </th>
+
+            <th>
+                Revenue Uplift %
+            </th>
+
+            <th>
+                Quantity Uplift %
+            </th>
+
+        </tr>
+
+        </thead>
+
+
+        <tbody>
+
+
+        {% for row in promotions %}
+
+        <tr>
+
+            <td>
+                {{ row.campaign_name }}
+            </td>
+
+            <td>
+
+                {{ "{:,.0f}".format(
+                row.before_revenue or 0
+                ) }}
+
+            </td>
+
+            <td>
+
+                {{ "{:,.0f}".format(
+                row.during_revenue or 0
+                ) }}
+
+            </td>
+
+
+            <td
+                    class="
+                    {% if
+                        row.revenue_uplift_pct
+                        is not none
+                        and
+                        row.revenue_uplift_pct >= 0
+                    %}
+                    positive
+                    {% else %}
+                    negative
+                    {% endif %}
+                "
+            >
+
+                {% if
+                row.revenue_uplift_pct
+                is not none
+                %}
+
+                {{ "%.2f"|format(
+                row.revenue_uplift_pct
+                ) }}%
+
+                {% endif %}
+
+            </td>
+
+
+            <td
+                    class="
+                    {% if
+                        row.quantity_uplift_pct
+                        is not none
+                        and
+                        row.quantity_uplift_pct >= 0
+                    %}
+                    positive
+                    {% else %}
+                    negative
+                    {% endif %}
+                "
+            >
+
+                {% if
+                row.quantity_uplift_pct
+                is not none
+                %}
+
+                {{ "%.2f"|format(
+                row.quantity_uplift_pct
+                ) }}%
+
+                {% endif %}
+
+            </td>
+
+
+        </tr>
+
+
+        {% endfor %}
+
+
+        </tbody>
+
+    </table>
+
+
+</div>
+
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+
+<script>
+
+
+    new Chart(
+
+        document.getElementById(
+            "promoChart"
+        ),
+
+        {
+
+            type: "bar",
+
+            data: {
+
+                labels:
+                    {{ promotions
+                        | map(attribute='campaign_name')
+                        | list
+                        | tojson
+                    }},
+
+                datasets: [
+
+                    {
+
+                        label:
+                            "Before",
+
+                        data:
+                            {{ promotions
+                                | map(attribute='before_revenue')
+                                | list
+                                | tojson
+                            }}
+
+                    },
+
+                    {
+
+                        label:
+                            "During",
+
+                        data:
+                            {{ promotions
+                                | map(attribute='during_revenue')
+                                | list
+                                | tojson
+                            }}
+
+                    }
+
+                ]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                scales: {
+
+                    x: {
+
+                        ticks: {
+
+                            maxRotation: 90,
+
+                            minRotation: 45
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    );
+
+
+</script>
+
+
+{% endblock %}

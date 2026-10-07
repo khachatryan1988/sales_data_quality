@@ -130,6 +130,11 @@
 
         .button:hover {
             opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .dashboard-button {
+            background: #7c3aed;
         }
 
         .issues-button {
@@ -169,6 +174,28 @@
             border-radius: 12px;
             color: #115e59;
             line-height: 1.5;
+        }
+
+        @media (max-width: 700px) {
+
+            .container {
+                margin: 20px auto;
+                padding: 0 14px;
+            }
+
+            .card {
+                padding: 22px;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .button {
+                text-align: center;
+                width: 100%;
+            }
+
         }
 
     </style>
@@ -336,14 +363,20 @@
 
             The uploaded workbook was validated,
             loaded into the PostgreSQL raw layer,
-            processed through the Data Quality
-            pipeline, cleaned, analyzed, and
-            prepared for reporting.
+            processed through the Data Quality pipeline,
+            cleaned, analyzed, and prepared for reporting.
 
         </div>
 
 
         <div class="actions">
+
+            <a
+                    href="/dashboard"
+                    class="button dashboard-button"
+            >
+                Open Analytics Dashboard
+            </a>
 
             <a
                     href="/issues"

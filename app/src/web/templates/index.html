@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -14,260 +15,831 @@
     </title>
 
     <style>
+
         * {
             box-sizing: border-box;
         }
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f5f7fa;
-            color: #1f2937;
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+
+            --green: #0f766e;
+            --green-dark: #115e59;
+
+            --purple: #7c3aed;
+            --purple-dark: #6d28d9;
+
+            --background: #f5f7fa;
+            --card: #ffffff;
+
+            --text: #1f2937;
+            --muted: #64748b;
+
+            --border: #cbd5e1;
         }
+
+
+        body {
+
+            margin: 0;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                var(--background);
+
+            color:
+                var(--text);
+        }
+
 
         .container {
-            max-width: 900px;
-            margin: 70px auto;
-            padding: 0 24px;
+
+            max-width: 920px;
+
+            margin:
+                60px auto;
+
+            padding:
+                0 24px;
         }
+
 
         .card {
-            background: white;
-            border-radius: 18px;
-            padding: 40px;
+
+            background:
+                var(--card);
+
+            border-radius:
+                18px;
+
+            padding:
+                42px;
+
             box-shadow:
-                0 12px 40px rgba(0, 0, 0, 0.08);
+                0 12px 40px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.08
+                );
         }
+
 
         h1 {
+
             margin-top: 0;
-            font-size: 32px;
-            margin-bottom: 10px;
+
+            margin-bottom:
+                10px;
+
+            font-size:
+                34px;
         }
+
 
         .subtitle {
-            color: #6b7280;
-            margin-bottom: 30px;
-            font-size: 16px;
-            line-height: 1.5;
+
+            color:
+                var(--muted);
+
+            margin-bottom:
+                28px;
+
+            font-size:
+                16px;
+
+            line-height:
+                1.6;
         }
+
+
+        .dashboard-section {
+
+            margin-bottom:
+                28px;
+        }
+
+
+        .dashboard-button {
+
+            display:
+                inline-block;
+
+            text-decoration:
+                none;
+
+            background:
+                var(--primary);
+
+            color:
+                white;
+
+            padding:
+                14px 24px;
+
+            border-radius:
+                9px;
+
+            font-size:
+                15px;
+
+            transition:
+                0.2s;
+        }
+
+
+        .dashboard-button:hover {
+
+            background:
+                var(--primary-dark);
+
+            transform:
+                translateY(-1px);
+        }
+
+
+        .section-label {
+
+            font-size:
+                13px;
+
+            font-weight:
+                700;
+
+            text-transform:
+                uppercase;
+
+            letter-spacing:
+                0.6px;
+
+            color:
+                #94a3b8;
+
+            margin-bottom:
+                12px;
+        }
+
 
         .download-buttons {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-bottom: 12px;
+
+            display:
+                flex;
+
+            gap:
+                12px;
+
+            flex-wrap:
+                wrap;
+
+            margin-bottom:
+                12px;
         }
+
 
         .download-button {
-            display: inline-block;
-            text-decoration: none;
-            color: white;
-            padding: 13px 22px;
-            border-radius: 9px;
-            font-size: 15px;
-            transition: 0.2s;
+
+            display:
+                inline-block;
+
+            text-decoration:
+                none;
+
+            color:
+                white;
+
+            padding:
+                13px 22px;
+
+            border-radius:
+                9px;
+
+            font-size:
+                15px;
+
+            transition:
+                0.2s;
         }
+
 
         .template-button {
-            background: #0f766e;
+
+            background:
+                var(--green);
         }
+
 
         .template-button:hover {
-            background: #115e59;
+
+            background:
+                var(--green-dark);
+
+            transform:
+                translateY(-1px);
         }
+
 
         .sample-button {
-            background: #7c3aed;
+
+            background:
+                var(--purple);
         }
+
 
         .sample-button:hover {
-            background: #6d28d9;
+
+            background:
+                var(--purple-dark);
+
+            transform:
+                translateY(-1px);
         }
+
 
         .hint {
-            margin-top: 10px;
-            color: #64748b;
-            font-size: 14px;
-            line-height: 1.5;
+
+            margin-top:
+                10px;
+
+            color:
+                var(--muted);
+
+            font-size:
+                14px;
+
+            line-height:
+                1.55;
         }
 
+
         .separator {
-            display: flex;
-            align-items: center;
-            margin: 30px 0;
-            color: #94a3b8;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            margin:
+                32px 0;
+
+            color:
+                #94a3b8;
         }
+
 
         .separator::before,
         .separator::after {
-            content: "";
-            flex: 1;
-            height: 1px;
-            background: #e2e8f0;
+
+            content:
+                "";
+
+            flex:
+                1;
+
+            height:
+                1px;
+
+            background:
+                #e2e8f0;
         }
+
 
         .separator span {
-            padding: 0 15px;
-            font-size: 13px;
+
+            padding:
+                0 15px;
+
+            font-size:
+                13px;
         }
+
 
         .upload-box {
-            border: 2px dashed #cbd5e1;
-            border-radius: 14px;
-            padding: 35px;
-            text-align: center;
-            transition: 0.2s;
+
+            border:
+                2px dashed
+                var(--border);
+
+            border-radius:
+                14px;
+
+            padding:
+                38px;
+
+            text-align:
+                center;
+
+            transition:
+                0.2s;
+
+            background:
+                #ffffff;
         }
+
 
         .upload-box:hover {
-            border-color: #94a3b8;
-            background: #f8fafc;
+
+            border-color:
+                #94a3b8;
+
+            background:
+                #f8fafc;
         }
+
+
+        .upload-title {
+
+            margin-bottom:
+                18px;
+
+            font-weight:
+                700;
+
+            font-size:
+                17px;
+        }
+
 
         input[type="file"] {
-            margin-bottom: 20px;
+
+            margin-bottom:
+                20px;
         }
+
 
         button {
-            border: none;
-            background: #2563eb;
-            color: white;
-            padding: 14px 24px;
-            border-radius: 9px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: 0.2s;
+
+            border:
+                none;
+
+            background:
+                var(--primary);
+
+            color:
+                white;
+
+            padding:
+                14px 24px;
+
+            border-radius:
+                9px;
+
+            cursor:
+                pointer;
+
+            font-size:
+                16px;
+
+            transition:
+                0.2s;
         }
+
 
         button:hover {
-            background: #1d4ed8;
+
+            background:
+                var(--primary-dark);
+
+            transform:
+                translateY(-1px);
         }
+
 
         .requirements {
-            margin-top: 35px;
-            padding: 22px;
-            background: #f8fafc;
-            border-radius: 12px;
-            line-height: 1.6;
+
+            margin-top:
+                35px;
+
+            padding:
+                22px;
+
+            background:
+                #f8fafc;
+
+            border-radius:
+                12px;
+
+            line-height:
+                1.6;
         }
+
 
         .requirements strong {
-            display: block;
-            margin-bottom: 10px;
+
+            display:
+                block;
+
+            margin-bottom:
+                10px;
         }
 
+
         code {
-            background: #e2e8f0;
-            padding: 3px 6px;
-            border-radius: 5px;
-            font-size: 13px;
+
+            background:
+                #e2e8f0;
+
+            padding:
+                3px 6px;
+
+            border-radius:
+                5px;
+
+            font-size:
+                13px;
         }
+
+
+        .architecture {
+
+            margin-top:
+                28px;
+
+            padding:
+                20px;
+
+            border:
+                1px solid #e2e8f0;
+
+            border-radius:
+                12px;
+
+            background:
+                #ffffff;
+        }
+
+
+        .architecture-title {
+
+            font-weight:
+                700;
+
+            margin-bottom:
+                14px;
+        }
+
+
+        .flow {
+
+            font-family:
+                Consolas,
+                monospace;
+
+            font-size:
+                13px;
+
+            line-height:
+                1.8;
+
+            color:
+                #334155;
+
+            overflow-x:
+                auto;
+        }
+
+
+        @media (
+            max-width: 700px
+        ) {
+
+            .container {
+
+                margin:
+                    20px auto;
+
+                padding:
+                    0 14px;
+            }
+
+
+            .card {
+
+                padding:
+                    24px;
+            }
+
+
+            h1 {
+
+                font-size:
+                    28px;
+            }
+
+
+            .download-buttons {
+
+                flex-direction:
+                    column;
+            }
+
+
+            .download-button,
+            .dashboard-button {
+
+                width:
+                    100%;
+
+                text-align:
+                    center;
+            }
+
+
+            .upload-box {
+
+                padding:
+                    25px 15px;
+            }
+
+        }
+
     </style>
+
 </head>
+
 
 <body>
 
+
 <div class="container">
 
+
     <div class="card">
+
 
         <h1>
             Sales & Data Quality Analytics
         </h1>
 
+
         <div class="subtitle">
-            Upload an Excel workbook and run
-            the complete analytics pipeline.
+
+            Upload business data from Excel,
+            validate Data Quality,
+            rebuild the analytics layer,
+            explore the built-in web dashboard,
+            export Excel reports,
+            or use the same PostgreSQL analytics
+            layer in Power BI.
+
         </div>
+
+
+        <div class="dashboard-section">
+
+            <div class="section-label">
+                Analytics
+            </div>
+
+            <a
+                    href="/dashboard"
+                    class="dashboard-button"
+            >
+                Open Analytics Dashboard
+            </a>
+
+        </div>
+
+
+        <div class="section-label">
+            Excel Files
+        </div>
+
 
         <div class="download-buttons">
 
+
             <a
                     href="/template"
-                    class="download-button template-button"
+                    class="
+                    download-button
+                    template-button
+                "
             >
                 Download Excel Template
             </a>
 
+
             <a
                     href="/sample"
-                    class="download-button sample-button"
+                    class="
+                    download-button
+                    sample-button
+                "
             >
                 Download Sample Excel
             </a>
 
+
         </div>
+
 
         <div class="hint">
-            <strong>Template</strong> contains only the required sheets and columns.
+
+            <strong>
+                Template
+            </strong>
+
+            contains only the required sheets
+            and database columns.
+
             <br>
-            <strong>Sample</strong> contains the current data from PostgreSQL raw tables.
+
+            <strong>
+                Sample
+            </strong>
+
+            contains the current dataset
+            stored in the PostgreSQL raw layer.
+
         </div>
+
 
         <div class="separator">
-            <span>OR</span>
+
+            <span>
+                UPLOAD YOUR DATA
+            </span>
+
         </div>
 
+
         <form
+
                 action="/upload"
+
                 method="post"
+
                 enctype="multipart/form-data"
+
         >
+
 
             <div class="upload-box">
 
+
+                <div class="upload-title">
+                    Select Excel Workbook
+                </div>
+
+
                 <input
+
                         type="file"
+
                         name="file"
+
                         accept=".xlsx"
+
                         required
+
                 >
+
 
                 <br>
 
+
                 <button type="submit">
+
                     Upload & Run Analysis
+
                 </button>
+
 
             </div>
 
+
         </form>
 
+
         <div class="requirements">
+
 
             <strong>
                 Required workbook sheets
             </strong>
 
+
             <p>
-                <code>products</code>,
-                <code>customers</code>,
-                <code>sales</code>,
-                <code>promotions</code>
+
+                <code>
+                    products
+                </code>,
+
+                <code>
+                    customers
+                </code>,
+
+                <code>
+                    sales
+                </code>,
+
+                <code>
+                    promotions
+                </code>
+
             </p>
+
 
             <strong>
-                Important
+                File requirements
             </strong>
 
-            <p>
-                Column names must match
-                the current PostgreSQL
-                <code>raw</code> tables.
-            </p>
 
             <p>
-                For the first test, download
-                <strong>Sample Excel</strong>
-                and upload that same file back.
+
+                The workbook must be an
+
+                <code>
+                    .xlsx
+                </code>
+
+                file.
+
             </p>
+
+
+            <p>
+
+                Column names must match
+                the current PostgreSQL
+
+                <code>
+                    raw
+                </code>
+
+                table structure.
+
+            </p>
+
+
+            <p>
+
+                You can download the generated
+                Excel Template to obtain
+                the exact required structure.
+
+            </p>
+
 
         </div>
 
+
+        <div class="architecture">
+
+
+            <div class="architecture-title">
+
+                Processing Architecture
+
+            </div>
+
+
+            <div class="flow">
+
+                Excel / Demo Data
+                <br>
+                ↓
+                <br>
+                PostgreSQL raw
+                <br>
+                ↓
+                <br>
+                Data Quality Validation
+                <br>
+                ↓
+                <br>
+                PostgreSQL clean
+                <br>
+                ↓
+                <br>
+                Business Analytics + ABC/XYZ
+                <br>
+                ↓
+                <br>
+                PostgreSQL analytics
+                <br>
+                ↓
+                <br>
+                Web Dashboard / Excel Report / Power BI
+
+            </div>
+
+
+        </div>
+
+
     </div>
 
+
 </div>
+
 
 </body>
 

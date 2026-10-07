@@ -1,214 +1,149 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
 
-    <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1.0"
-    >
+{% block title %}
+Data Quality Issues
+{% endblock %}
 
-    <title>
-        Data Quality Issues
-    </title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+{% block content %}
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f5f7fa;
-            color: #1f2937;
-        }
 
-        .container {
-            max-width: 1400px;
-            margin: 40px auto;
-            padding: 0 24px;
-        }
+<h1 class="page-title">
+    Data Quality Issues
+</h1>
 
-        .card {
-            background: white;
-            border-radius: 18px;
-            padding: 30px;
-            box-shadow:
-                0 12px 40px rgba(0, 0, 0, 0.08);
-        }
+<div class="page-subtitle">
 
-        h1 {
-            margin-top: 0;
-            margin-bottom: 8px;
-        }
+    Current detected issues:
 
-        .subtitle {
-            color: #6b7280;
-            margin-bottom: 25px;
-        }
-
-        .actions {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-        }
-
-        .button {
-            display: inline-block;
-            text-decoration: none;
-            padding: 11px 18px;
-            border-radius: 8px;
-            color: white;
-        }
-
-        .primary {
-            background: #2563eb;
-        }
-
-        .green {
-            background: #0f766e;
-        }
-
-        .secondary {
-            background: #475569;
-        }
-
-        .table-wrapper {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th,
-        td {
-            padding: 12px 14px;
-            border-bottom: 1px solid #e5e7eb;
-            text-align: left;
-            vertical-align: top;
-            font-size: 14px;
-        }
-
-        th {
-            background: #f8fafc;
-            position: sticky;
-            top: 0;
-        }
-
-        tr:hover {
-            background: #f8fafc;
-        }
-
-        .badge {
-            display: inline-block;
-            background: #fee2e2;
-            color: #991b1b;
-            padding: 4px 8px;
-            border-radius: 999px;
-            font-size: 12px;
-        }
-
-        .count {
-            font-size: 18px;
-            font-weight: bold;
-        }
-    </style>
-</head>
-
-<body>
-
-<div class="container">
-
-    <div class="card">
-
-        <h1>
-            Data Quality Issues
-        </h1>
-
-        <div class="subtitle">
-            Current detected issues:
-            <span class="count">{{ total }}</span>
-        </div>
-
-        <div class="actions">
-
-            <a
-                    href="/report"
-                    class="button green"
-            >
-                Download Data Quality Report
-            </a>
-
-            <a
-                    href="/"
-                    class="button secondary"
-            >
-                Back to Upload
-            </a>
-
-        </div>
-
-        <div class="table-wrapper">
-
-            <table>
-
-                <thead>
-                <tr>
-                    <th>Check</th>
-                    <th>Table</th>
-                    <th>Issue Type</th>
-                    <th>Row Key</th>
-                    <th>Detail</th>
-                </tr>
-                </thead>
-
-                <tbody>
-
-                {% for issue in issues %}
-
-                <tr>
-
-                    <td>
-                        {{ issue.check_name }}
-                    </td>
-
-                    <td>
-                        {{ issue.table_name }}
-                    </td>
-
-                    <td>
-                        <span class="badge">
-                            {{ issue.issue_type }}
-                        </span>
-                    </td>
-
-                    <td>
-                        {{ issue.row_key }}
-                    </td>
-
-                    <td>
-                        {{ issue.detail }}
-                    </td>
-
-                </tr>
-
-                {% endfor %}
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-    </div>
+    <strong>
+        {{ total }}
+    </strong>
 
 </div>
 
-</body>
 
-</html>
+<div
+        class="actions"
+        style="
+        margin-bottom: 20px;
+    "
+>
+
+
+    <a
+            href="/data-quality"
+            class="
+            button
+            button-purple
+        "
+    >
+        Data Quality Dashboard
+    </a>
+
+
+    <a
+            href="/report"
+            class="
+            button
+            button-green
+        "
+    >
+        Download Excel Report
+    </a>
+
+
+    <a
+            href="/"
+            class="
+            button
+            button-gray
+        "
+    >
+        Excel Upload
+    </a>
+
+
+</div>
+
+
+<div class="table-card">
+
+
+    <table>
+
+        <thead>
+
+        <tr>
+
+            <th>
+                Check
+            </th>
+
+            <th>
+                Table
+            </th>
+
+            <th>
+                Issue Type
+            </th>
+
+            <th>
+                Row Key
+            </th>
+
+            <th>
+                Detail
+            </th>
+
+        </tr>
+
+        </thead>
+
+
+        <tbody>
+
+
+        {% for issue in issues %}
+
+        <tr>
+
+            <td>
+                {{ issue.check_name }}
+            </td>
+
+            <td>
+                {{ issue.table_name }}
+            </td>
+
+            <td>
+                {{ issue.issue_type }}
+            </td>
+
+            <td>
+                {{ issue.row_key }}
+            </td>
+
+            <td
+                    style="
+                    white-space: normal;
+                "
+            >
+                {{ issue.detail }}
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+
+        </tbody>
+
+    </table>
+
+
+</div>
+
+
+{% endblock %}
